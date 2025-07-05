@@ -243,6 +243,12 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
   const handleGenerateItinerary = () => {
     console.log('Generating itinerary for:', selectedDestination);
     console.log('Preferences:', preferences);
+    
+    if (!selectedDestination.trim()) {
+      alert('Please enter a destination name');
+      return;
+    }
+    
     const request: AIItineraryRequest = {
       destination: selectedDestination,
       arrivalDate: preferences.arrivalDate,
@@ -252,6 +258,11 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
       interests: preferences.interests
     };
     console.log('AI Request:', request);
+    
+    // Close the preferences modal
+    setShowPreferences(false);
+    
+    // Call the parent handler
     onGenerateItinerary(selectedDestination, request);
   };
 

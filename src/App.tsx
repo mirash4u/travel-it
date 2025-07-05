@@ -16,6 +16,7 @@ function App() {
 
   const handleGenerateItinerary = async (destination: string, preferences: AIItineraryRequest) => {
     console.log('App: Starting itinerary generation for:', destination);
+    console.log('App: Preferences:', preferences);
     setIsGenerating(true);
     setCurrentPreferences(preferences);
     try {
@@ -25,9 +26,15 @@ function App() {
       setCurrentView('itinerary');
     } catch (error) {
       console.error('Failed to generate itinerary:', error);
-      // Show user-friendly error message with specific details
+      // Show user-friendly error message
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      alert(`Failed to generate itinerary: ${errorMessage}\n\nPlease check your AI configuration in the .env file or try again.`);
+      
+      // Check if it's an API key issue
+      if (errorMessage.includes('API key')) {
+        alert(`AI Configuration Required:\n\nTo use real AI-generated itineraries, please:\n1. Copy .env.example to .env\n2. Add your AI API key\n3. Restart the application\n\nFor now, you'll see demo data.`);
+      } else {
+        alert(`Failed to generate itinerary: ${errorMessage}\n\nPlease try again or check your internet connection.`);
+      }
     } finally {
       setIsGenerating(false);
     }
