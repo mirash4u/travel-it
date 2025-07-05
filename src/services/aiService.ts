@@ -10,9 +10,9 @@ interface AIConfig {
 
 // Default configuration - you can modify this
 const AI_CONFIG: AIConfig = {
-  provider: 'openai', // Change to your preferred provider
+  provider: (import.meta.env.VITE_AI_PROVIDER as any) || 'openai', // Change to your preferred provider
   apiKey: import.meta.env.VITE_AI_API_KEY || '', // Set your API key in .env
-  model: 'gpt-4', // or 'gpt-3.5-turbo', 'claude-3-sonnet', etc.
+  model: import.meta.env.VITE_AI_MODEL || 'gpt-4', // or 'gpt-3.5-turbo', 'claude-3-sonnet', etc.
   baseUrl: import.meta.env.VITE_AI_BASE_URL // Optional custom endpoint
 };
 
@@ -20,8 +20,21 @@ export class AIItineraryService {
   private static async callAI(prompt: string): Promise<string> {
     const { provider, apiKey, model, baseUrl } = AI_CONFIG;
 
+    console.log('AI Configuration:', { 
+      provider, 
+      hasApiKey: !!apiKey, 
+      model,
+      hasBaseUrl: !!baseUrl 
+    });
+
     if (!apiKey) {
-      console.warn('No AI API key found. Using mock data.');
+      console.warn('No AI API key found in environment variables. Using mock data.');
+      console.log('Available environment variables:', {
+        VITE_AI_PROVIDER: import.meta.env.VITE_AI_PROVIDER,
+        VITE_AI_MODEL: import.meta.env.VITE_AI_MODEL,
+        VITE_AI_BASE_URL: import.meta.env.VITE_AI_BASE_URL,
+        hasApiKey: !!import.meta.env.VITE_AI_API_KEY
+      });
       return this.getMockResponse();
     }
 
@@ -164,50 +177,84 @@ export class AIItineraryService {
     return JSON.stringify({
       activities: [
         {
-          name: "Explore Historic City Center",
-          description: "Walk through the charming old town and discover local architecture",
+          name: "Visit Jemaa el-Fnaa Square",
+          description: "Experience the heart of Marrakech with street performers, food stalls, and vibrant atmosphere",
           time: "09:00",
           duration: "2-3 hours",
           category: "sightseeing",
           cost: "Free",
-          location: "City Center"
+          location: "Medina"
         },
         {
-          name: "Local Food Market Tour",
-          description: "Experience authentic local cuisine and fresh ingredients",
+          name: "Explore Bahia Palace",
+          description: "Marvel at stunning Moroccan architecture and intricate tile work",
+          time: "10:30",
+          duration: "1.5 hours",
+          category: "cultural",
+          cost: "$7",
+          location: "Medina"
+        },
+        {
+          name: "Traditional Moroccan Cooking Class",
+          description: "Learn to prepare authentic tagines and couscous with local spices",
           time: "11:30",
-          duration: "1-2 hours",
+          duration: "3 hours",
           category: "dining",
-          cost: "$20-40",
-          location: "Central Market"
+          cost: "$45-65",
+          location: "Riad Cooking School"
         },
         {
-          name: "Cultural Museum Visit",
-          description: "Learn about local history and cultural heritage",
+          name: "Souk Shopping Adventure",
+          description: "Navigate the bustling markets for spices, textiles, and handcrafted goods",
           time: "14:00",
           duration: "2 hours",
+          category: "shopping",
+          cost: "$20-100",
+          location: "Souk Semmarine"
+        },
+        {
+          name: "Majorelle Garden Visit",
+          description: "Stroll through the famous blue garden and Berber Museum",
+          time: "16:00",
+          duration: "1.5 hours",
+          category: "relaxation",
+          cost: "$7",
+          location: "Gueliz"
+        },
+        {
+          name: "Sunset at Koutoubia Mosque",
+          description: "Admire the iconic minaret and enjoy the evening call to prayer",
+          time: "18:30",
+          duration: "1 hour",
           category: "cultural",
-          cost: "$15-25",
-          location: "Museum District"
+          cost: "Free",
+          location: "Medina"
         }
       ],
       accommodations: [
         {
-          name: "City Center Hotel",
-          type: "hotel",
-          priceRange: "$120-180/night",
-          rating: 4.3,
-          description: "Modern hotel with excellent location and amenities"
+          name: "Riad Yasmine",
+          type: "riad",
+          priceRange: "$80-120/night",
+          rating: 4.5,
+          description: "Traditional riad with rooftop terrace and authentic Moroccan decor"
         },
         {
-          name: "Cozy Local Guesthouse",
+          name: "La Mamounia",
+          type: "hotel",
+          priceRange: "$400-800/night",
+          rating: 4.8,
+          description: "Legendary luxury palace hotel with world-class spa and gardens"
+        },
+        {
+          name: "Dar Anika",
           type: "guesthouse",
-          priceRange: "$60-90/night",
-          rating: 4.1,
-          description: "Family-run guesthouse with authentic local experience"
+          priceRange: "$45-75/night",
+          rating: 4.2,
+          description: "Charming family-run guesthouse in the heart of the medina"
         }
       ],
-      overview: "A wonderful itinerary combining cultural exploration, local cuisine, and comfortable accommodations."
+      overview: "An immersive Marrakech experience combining imperial history, vibrant souks, traditional cuisine, and stunning Islamic architecture in Morocco's red city."
     });
   }
 

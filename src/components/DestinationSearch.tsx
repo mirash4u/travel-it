@@ -169,6 +169,8 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
   };
 
   const handleGenerateItinerary = () => {
+    console.log('Generating itinerary for:', selectedDestination);
+    console.log('Preferences:', preferences);
     const request: AIItineraryRequest = {
       destination: selectedDestination,
       arrivalDate: preferences.arrivalDate,
@@ -177,6 +179,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
       travelers: preferences.travelers,
       interests: preferences.interests
     };
+    console.log('AI Request:', request);
     onGenerateItinerary(selectedDestination, request);
   };
 

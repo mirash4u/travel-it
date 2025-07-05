@@ -15,14 +15,18 @@ function App() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleGenerateItinerary = async (destination: string, preferences: AIItineraryRequest) => {
+    console.log('App: Starting itinerary generation for:', destination);
     setIsGenerating(true);
     setCurrentPreferences(preferences);
     try {
       const response = await AIItineraryService.generateItinerary(preferences);
+      console.log('App: Received AI response:', response);
       setGeneratedItinerary(response);
       setCurrentView('itinerary');
     } catch (error) {
       console.error('Failed to generate itinerary:', error);
+      // Show user-friendly error message
+      alert('Failed to generate itinerary. Please check your AI configuration or try again.');
     } finally {
       setIsGenerating(false);
     }
