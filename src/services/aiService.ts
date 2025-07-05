@@ -168,10 +168,7 @@ export class AIItineraryService {
         messages: [
           {
             role: 'system',
-            content: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
-
-The JSON must include real, high-quality Pexels image URLs for each activity. Use this format for images:
-https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+            content: \`You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
 
 Make sure all image URLs are valid Pexels URLs that show relevant attractions, landmarks, or activities for the destination.`
           },
@@ -363,6 +360,7 @@ Requirements:
 - Provide realistic costs and durations
 - Use specific location names within the destination`;
   }
+
   static async generateItinerary(request: AIItineraryRequest): Promise<AIItineraryResponse> {
     console.log('Generating itinerary for request:', request);
     
