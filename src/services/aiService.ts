@@ -168,9 +168,18 @@ export class AIItineraryService {
         messages: [
           {
             role: 'system',
-
-Make sure all image URLs are valid Pexels URLs that show relevant attractions, landmarks, or activities for the destination.`
             content: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
+
+CRITICAL: Each activity must include a real, working Pexels image URL that shows the ACTUAL attraction, landmark, or activity mentioned. The images must be specifically relevant to both the destination and the activity type.
+
+For example:
+- For "Eiffel Tower visit" in Paris: Use an actual Eiffel Tower image
+- For "Sushi making class" in Tokyo: Use an image of sushi or cooking class
+- For "Beach relaxation" in Bali: Use an actual Bali beach image
+
+Image format: https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+
+Research and use real Pexels photo IDs that match the destination and activity.`
           },
           {
             role: 'user',
@@ -211,10 +220,16 @@ Make sure all image URLs are valid Pexels URLs that show relevant attractions, l
             role: 'user',
             content: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
 
-The JSON must include real, high-quality Pexels image URLs for each activity. Use this format for images:
-https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+CRITICAL: Each activity must include a real, working Pexels image URL that shows the ACTUAL attraction, landmark, or activity mentioned. The images must be specifically relevant to both the destination and the activity type.
 
-Make sure all image URLs are valid Pexels URLs that show relevant attractions, landmarks, or activities for the destination.
+For example:
+- For "Eiffel Tower visit" in Paris: Use an actual Eiffel Tower image
+- For "Sushi making class" in Tokyo: Use an image of sushi or cooking class
+- For "Beach relaxation" in Bali: Use an actual Bali beach image
+
+Image format: https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+
+Research and use real Pexels photo IDs that match the destination and activity.
 
 ${prompt}`
           }
@@ -248,10 +263,16 @@ ${prompt}`
               {
                 text: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
 
-The JSON must include real, high-quality Pexels image URLs for each activity. Use this format for images:
-https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+CRITICAL: Each activity must include a real, working Pexels image URL that shows the ACTUAL attraction, landmark, or activity mentioned. The images must be specifically relevant to both the destination and the activity type.
 
-Make sure all image URLs are valid Pexels URLs that show relevant attractions, landmarks, or activities for the destination.
+For example:
+- For "Eiffel Tower visit" in Paris: Use an actual Eiffel Tower image
+- For "Sushi making class" in Tokyo: Use an image of sushi or cooking class
+- For "Beach relaxation" in Bali: Use an actual Bali beach image
+
+Image format: https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+
+Research and use real Pexels photo IDs that match the destination and activity.
 
 ${prompt}`
               }
@@ -289,10 +310,16 @@ ${prompt}`
         model,
         prompt: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
 
-The JSON must include real, high-quality Pexels image URLs for each activity. Use this format for images:
-https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+CRITICAL: Each activity must include a real, working Pexels image URL that shows the ACTUAL attraction, landmark, or activity mentioned. The images must be specifically relevant to both the destination and the activity type.
 
-Make sure all image URLs are valid Pexels URLs that show relevant attractions, landmarks, or activities for the destination.
+For example:
+- For "Eiffel Tower visit" in Paris: Use an actual Eiffel Tower image
+- For "Sushi making class" in Tokyo: Use an image of sushi or cooking class
+- For "Beach relaxation" in Bali: Use an actual Bali beach image
+
+Image format: https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+
+Research and use real Pexels photo IDs that match the destination and activity.
 
 ${prompt}`,
         max_tokens: 3000
@@ -359,6 +386,8 @@ Requirements:
 - Include a mix of categories: sightseeing, dining, cultural, shopping, etc.
 - Provide realistic costs and durations
 - Use specific location names within the destination`;
+  }
+
   static async generateItinerary(request: AIItineraryRequest): Promise<AIItineraryResponse> {
     console.log('Generating itinerary for request:', request);
     

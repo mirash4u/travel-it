@@ -136,6 +136,15 @@ export const ItineraryPreview: React.FC<ItineraryPreviewProps> = ({
                               src={activity.image} 
                               alt={activity.name}
                               className="w-16 h-16 rounded-lg object-cover"
+                              onError={(e) => {
+                                // Fallback to icon if image fails to load
+                                const target = e.target as HTMLImageElement;
+                                target.style.display = 'none';
+                                const parent = target.parentElement;
+                                if (parent) {
+                                  parent.innerHTML = `<span class="text-2xl">${getCategoryIcon(activity.category)}</span>`;
+                                }
+                              }}
                             />
                             <span className="absolute -top-1 -right-1 text-lg bg-white rounded-full p-1 shadow-sm">
                               {getCategoryIcon(activity.category)}

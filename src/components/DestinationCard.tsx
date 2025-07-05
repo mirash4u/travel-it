@@ -197,6 +197,15 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({
                             src={activity.image} 
                             alt={activity.name}
                             className="w-12 h-12 rounded-lg object-cover"
+                            onError={(e) => {
+                              // Fallback to icon if image fails to load
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              const parent = target.parentElement;
+                              if (parent) {
+                                parent.innerHTML = `<span class="text-2xl">${getCategoryIcon(activity.category)}</span>`;
+                              }
+                            }}
                           />
                           <span className="absolute -top-1 -right-1 text-sm bg-white rounded-full p-1 shadow-sm">
                             {getCategoryIcon(activity.category)}
