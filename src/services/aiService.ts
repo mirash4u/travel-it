@@ -168,7 +168,7 @@ export class AIItineraryService {
         messages: [
           {
             role: 'system',
-            content: \`You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
+            content: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
 
 Make sure all image URLs are valid Pexels URLs that show relevant attractions, landmarks, or activities for the destination.`
           },
