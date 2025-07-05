@@ -59,7 +59,31 @@ export const AIItineraryPreview: React.FC<AIItineraryPreviewProps> = ({
             {itinerary.activities.slice(0, 6).map((activity, index) => (
               <div key={index} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
                 <div className="flex items-start space-x-3">
-                  <span className="text-2xl">{getCategoryIcon(activity.category)}</span>
+                  <div className="flex-shrink-0">
+                    {activity.image ? (
+                      <div className="relative">
+                        <img 
+                          src={activity.image} 
+                          alt={activity.name}
+                          className="w-12 h-12 rounded-lg object-cover"
+                          onError={(e) => {
+                            // Fallback to icon if image fails to load
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                            const parent = target.parentElement;
+                            if (parent) {
+                              parent.innerHTML = `<span class="text-2xl">${getCategoryIcon(activity.category)}</span>`;
+                            }
+                          }}
+                        />
+                        <span className="absolute -top-1 -right-1 text-sm bg-white rounded-full p-1 shadow-sm">
+                          {getCategoryIcon(activity.category)}
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-2xl">{getCategoryIcon(activity.category)}</span>
+                    )}
+                  </div>
                   <div className="flex-1">
                     <h5 className="font-medium text-gray-900">{activity.name}</h5>
                     <p className="text-sm text-gray-600 mt-1">{activity.description}</p>

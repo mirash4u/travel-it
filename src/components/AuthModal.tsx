@@ -5,11 +5,14 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialMode?: 'signin' | 'register';
+  onAuthSuccess?: (user: { name: string; email: string }) => void;
 }
 
-export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'signin' }) => {
+export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'signin', onAuthSuccess }) => {
   const [mode, setMode] = useState<'signin' | 'register'>(initialMode);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,15 +22,85 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    if (mode === 'register') {
+      if (!formData.name.trim()) {
+        newErrors.name = 'Name is required';
+      }
+      
+      if (!formData.confirmPassword) {
+        newErrors.confirmPassword = 'Please confirm your password';
+      } else if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = 'Passwords do not match';
+      }
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle authentication logic here
-    console.log('Auth submission:', { mode, formData });
-    onClose();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsLoading(true);
+    setErrors({});
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // For demo purposes, we'll simulate successful authentication
+      const user = {
+        name: formData.name || formData.email.split('@')[0],
+        email: formData.email
+      };
+      
+      // Store user data in localStorage for demo
+      localStorage.setItem('travelcraft_user', JSON.stringify(user));
+      
+      // Call success callback
+      if (onAuthSuccess) {
+        onAuthSuccess(user);
+      }
+      
+      // Show success message
+      alert(mode === 'signin' ? 'Welcome back!' : 'Account created successfully!');
+      
+      // Reset form and close modal
+      setFormData({ email: '', password: '', name: '', confirmPassword: '' });
+      onClose();
+      
+    } catch (error) {
+      setErrors({ general: 'Authentication failed. Please try again.' });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
   };
 
   return (
@@ -48,6 +121,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {errors.general && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              {errors.general}
+            </div>
+          )}
+          
           {mode === 'register' && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -58,10 +137,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                  errors.name ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                }`}
                 placeholder="Enter your full name"
                 required
               />
+              {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
             </div>
           )}
 
@@ -74,10 +156,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
+              }`}
               placeholder="Enter your email"
               required
             />
+            {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
           </div>
 
           <div>
@@ -90,7 +175,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                 type={showPassword ? 'text' : 'password'}
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
-                className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                className={`w-full px-4 py-3 pr-12 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                  errors.password ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                }`}
                 placeholder="Enter your password"
                 required
               />
@@ -102,6 +189,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                 {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
               </button>
             </div>
+            {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
           </div>
 
           {mode === 'register' && (
@@ -114,10 +202,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
                 type="password"
                 value={formData.confirmPassword}
                 onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                  errors.confirmPassword ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                }`}
                 placeholder="Confirm your password"
                 required
               />
+              {errors.confirmPassword && <p className="text-red-600 text-sm mt-1">{errors.confirmPassword}</p>}
             </div>
           )}
 
@@ -138,10 +229,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-lg transition-all duration-200 font-medium flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+            disabled={isLoading}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 rounded-lg transition-all duration-200 font-medium flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
           >
-            <span>{mode === 'signin' ? 'Sign In' : 'Create Account'}</span>
-            <ArrowRight className="w-4 h-4" />
+            {isLoading ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>{mode === 'signin' ? 'Signing In...' : 'Creating Account...'}</span>
+              </>
+            ) : (
+              <>
+                <span>{mode === 'signin' ? 'Sign In' : 'Create Account'}</span>
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
           </button>
 
           {/* Mode Switch */}

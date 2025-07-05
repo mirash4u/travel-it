@@ -20,9 +20,10 @@ interface PopularDestination {
 interface DestinationSearchProps {
   onGenerateItinerary: (destination: string, preferences: AIItineraryRequest) => void;
   onGoToTrips?: () => void;
+  onShowProfile?: () => void;
 }
 
-export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerateItinerary, onGoToTrips }) => {
+export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerateItinerary, onGoToTrips, onShowProfile }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showPreferences, setShowPreferences] = useState(false);
@@ -286,6 +287,14 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
           onGoToTrips();
         }
         break;
+      case 'profile':
+        if (onShowProfile) {
+          onShowProfile();
+        }
+        break;
+      case 'signout':
+        // Handle sign out - could show a message or redirect
+        break;
       case 'packages':
         // Handle holiday packages navigation
         console.log('Navigate to holiday packages');
@@ -305,6 +314,11 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
       default:
         console.log('Navigate to:', section);
     }
+  };
+
+  const handleAuthSuccess = (user: { name: string; email: string }) => {
+    // Handle successful authentication
+    console.log('User authenticated:', user);
   };
 
   return (
@@ -613,6 +627,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
           isOpen={showAuthModal}
           onClose={() => setShowAuthModal(false)}
           initialMode={authMode}
+          onAuthSuccess={handleAuthSuccess}
         />
       </div>
     </div>

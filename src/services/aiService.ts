@@ -65,7 +65,7 @@ export class AIItineraryService {
           category: "sightseeing",
           cost: "Free",
           location: "City Center",
-          image: "https://images.pexels.com/photos/1388030/pexels-photo-1388030.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/161901/paris-sunset-france-monument-161901.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Local Food Market Experience",
@@ -75,7 +75,7 @@ export class AIItineraryService {
           category: "dining",
           cost: "$15-30",
           location: "Central Market",
-          image: "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Cultural Museum Visit",
@@ -85,7 +85,7 @@ export class AIItineraryService {
           category: "cultural",
           cost: "$12-20",
           location: "Museum District",
-          image: "https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/2747449/pexels-photo-2747449.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Scenic Viewpoint Sunset",
@@ -95,7 +95,7 @@ export class AIItineraryService {
           category: "sightseeing",
           cost: "Free",
           location: "Scenic Overlook",
-          image: "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/1591056/pexels-photo-1591056.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Traditional Dinner Experience",
@@ -105,7 +105,7 @@ export class AIItineraryService {
           category: "dining",
           cost: "$25-45",
           location: "Restaurant District",
-          image: "https://images.pexels.com/photos/1581384/pexels-photo-1581384.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Artisan Workshop Visit",

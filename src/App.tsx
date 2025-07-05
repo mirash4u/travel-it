@@ -5,14 +5,16 @@ import { TripDetails } from './components/TripDetails';
 import { DestinationSearch } from './components/DestinationSearch';
 import { ItineraryPreview } from './components/ItineraryPreview';
 import { AIItineraryService } from './services/aiService';
+import { UserProfile } from './components/UserProfile';
 
 function App() {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
-  const [currentView, setCurrentView] = useState<'search' | 'itinerary' | 'trips' | 'trip-details'>('search');
+  const [currentView, setCurrentView] = useState<'search' | 'itinerary' | 'trips' | 'trip-details' | 'profile'>('search');
   const [generatedItinerary, setGeneratedItinerary] = useState<AIItineraryResponse | null>(null);
   const [currentPreferences, setCurrentPreferences] = useState<AIItineraryRequest | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showUserProfile, setShowUserProfile] = useState(false);
 
   const handleGenerateItinerary = async (destination: string, preferences: AIItineraryRequest) => {
     console.log('App: Starting itinerary generation for:', destination);
@@ -119,6 +121,14 @@ function App() {
     setCurrentPreferences(null);
   };
 
+  const handleShowProfile = () => {
+    setShowUserProfile(true);
+  };
+
+  const handleCloseProfile = () => {
+    setShowUserProfile(false);
+  };
+
   // Prevent flickering by ensuring stable rendering
   const renderCurrentView = () => {
     switch (currentView) {
@@ -127,6 +137,7 @@ function App() {
           <DestinationSearch 
             onGenerateItinerary={handleGenerateItinerary}
             onGoToTrips={goToTrips}
+            onShowProfile={handleShowProfile}
           />
         );
       
@@ -182,6 +193,11 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {renderCurrentView()}
+      
+      {/* User Profile Modal */}
+      {showUserProfile && (
+        <UserProfile onClose={handleCloseProfile} />
+      )}
     </div>
   );
 }

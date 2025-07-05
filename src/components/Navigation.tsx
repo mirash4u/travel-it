@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X, User, Settings, Calendar, Package, Globe, ChevronDown } from 'lucide-react';
+import { Menu, X, User, Settings, Calendar, Package, Globe, ChevronDown, LogOut } from 'lucide-react';
 import { Logo } from './Logo';
 
 interface NavigationProps {
@@ -11,6 +11,10 @@ export const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('EN');
+  const [currentUser, setCurrentUser] = useState(() => {
+    const stored = localStorage.getItem('travelcraft_user');
+    return stored ? JSON.parse(stored) : null;
+  });
 
   const navigationItems = [
     { id: 'packages', label: 'Holiday Packages', icon: Package },
@@ -45,6 +49,19 @@ export const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
   const handleLanguageSelect = (language: string) => {
     setSelectedLanguage(language);
     setIsLanguageMenuOpen(false);
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem('travelcraft_user');
+    setCurrentUser(null);
+    setIsUserMenuOpen(false);
+    if (onNavigate) {
+      onNavigate('signout');
+    }
+  };
+
+  const handleAuthSuccess = (user: { name: string; email: string }) => {
+    setCurrentUser(user);
   };
 
   return (
@@ -119,49 +136,80 @@ export const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
             <div className="relative">
               <button
                 onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg transition-colors"
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+                  currentUser 
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                    : 'bg-gray-800 hover:bg-gray-900 text-white'
+                }`}
               >
-                <User className="w-4 h-4" />
-                <span>Sign In</span>
+                {currentUser ? (
+                  <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center text-xs font-bold">
+                    {currentUser.name.charAt(0).toUpperCase()}
+                  </div>
+                ) : (
+                  <User className="w-4 h-4" />
+                )}
+                <span className="hidden sm:inline">
+                  {currentUser ? currentUser.name.split(' ')[0] : 'Sign In'}
+                </span>
                 <ChevronDown className={`w-4 h-4 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {isUserMenuOpen && (
                 <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 py-2 min-w-[160px]">
-                  <div className="px-4 py-2 border-b border-gray-200">
-                    <p className="text-sm font-medium text-gray-900">Welcome!</p>
-                    <p className="text-xs text-gray-500">Sign in to access your account</p>
-                  </div>
-                  
-                  <button
-                    onClick={() => handleNavigation('signin')}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    Sign In
-                  </button>
-                  
-                  <button
-                    onClick={() => handleNavigation('register')}
-                    className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                  >
-                    Create Account
-                  </button>
-                  
-                  <div className="border-t border-gray-200 mt-2 pt-2">
-                    {userMenuItems.map((item) => {
-                      const IconComponent = item.icon;
-                      return (
+                  {currentUser ? (
+                    <>
+                      <div className="px-4 py-2 border-b border-gray-200">
+                        <p className="text-sm font-medium text-gray-900">{currentUser.name}</p>
+                        <p className="text-xs text-gray-500">{currentUser.email}</p>
+                      </div>
+                      
+                      {userMenuItems.map((item) => {
+                        const IconComponent = item.icon;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => handleNavigation(item.id)}
+                            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2"
+                          >
+                            <IconComponent className="w-4 h-4" />
+                            <span>{item.label}</span>
+                          </button>
+                        );
+                      })}
+                      
+                      <div className="border-t border-gray-200 mt-2 pt-2">
                         <button
-                          key={item.id}
-                          onClick={() => handleNavigation(item.id)}
-                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center space-x-2"
+                          onClick={handleSignOut}
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center space-x-2"
                         >
-                          <IconComponent className="w-4 h-4" />
-                          <span>{item.label}</span>
+                          <LogOut className="w-4 h-4" />
+                          <span>Sign Out</span>
                         </button>
-                      );
-                    })}
-                  </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="px-4 py-2 border-b border-gray-200">
+                        <p className="text-sm font-medium text-gray-900">Welcome!</p>
+                        <p className="text-xs text-gray-500">Sign in to access your account</p>
+                      </div>
+                      
+                      <button
+                        onClick={() => handleNavigation('signin')}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Sign In
+                      </button>
+                      
+                      <button
+                        onClick={() => handleNavigation('register')}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        Create Account
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -204,10 +252,23 @@ export const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
                 
                 <button
                   onClick={() => handleNavigation('signin')}
-                  className="w-full text-left px-4 py-3 bg-gray-800 text-white rounded-lg transition-colors font-medium mt-2"
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors font-medium mt-2 ${
+                    currentUser 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-gray-800 text-white'
+                  }`}
                 >
-                  Sign In
+                  {currentUser ? `Welcome, ${currentUser.name.split(' ')[0]}` : 'Sign In'}
                 </button>
+                
+                {currentUser && (
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full text-left px-4 py-3 text-red-600 bg-red-50 rounded-lg transition-colors font-medium mt-2"
+                  >
+                    Sign Out
+                  </button>
+                )}
               </div>
 
               {/* Mobile Language Selector */}
