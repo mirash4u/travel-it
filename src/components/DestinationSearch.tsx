@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Star, TrendingUp, Sparkles, Users, Calendar, DollarSign, ArrowRight, Globe, Plane, Camera, Mountain, Waves, Building2, Award, Clock, Heart, ArrowLeftRight } from 'lucide-react';
+import { Search, MapPin, Star, TrendingUp, Sparkles, Users, Calendar, DollarSign, ArrowRight, Globe, Plane, Camera, Mountain, Waves, Building2 } from 'lucide-react';
 import { AIItineraryRequest } from '../types';
 import { Logo } from './Logo';
 
@@ -25,7 +25,6 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showPreferences, setShowPreferences] = useState(false);
   const [selectedDestination, setSelectedDestination] = useState<string>('');
-  const [fromLocation, setFromLocation] = useState('');
   const [preferences, setPreferences] = useState({
     budget: '',
     travelers: 2,
@@ -233,150 +232,42 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
             <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
               Discover amazing destinations and let our AI create the perfect itinerary for your next adventure
             </p>
+            
+            <button
+              onClick={() => document.getElementById('search-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-2 mx-auto"
+            >
+              <span>Explore Now</span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
           </div>
 
-          {/* Flight Search Interface */}
-          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 mb-16 max-w-6xl mx-auto">
-            {/* Tab Navigation */}
-            <div className="flex items-center space-x-1 mb-8 bg-gray-100 rounded-xl p-1 w-fit">
-              <button className="flex items-center space-x-2 px-6 py-3 bg-gray-800 text-white rounded-lg font-medium">
-                <Plane className="w-5 h-5" />
-                <span>Flight</span>
-              </button>
-              <button className="flex items-center space-x-2 px-6 py-3 text-gray-600 hover:text-gray-800 rounded-lg font-medium transition-colors">
-                <Building2 className="w-5 h-5" />
-                <span>Hotel</span>
-              </button>
-              <button className="flex items-center space-x-2 px-6 py-3 text-gray-600 hover:text-gray-800 rounded-lg font-medium transition-colors">
-                <MapPin className="w-5 h-5" />
-                <span>Rent a Car</span>
-              </button>
-            </div>
-
-            {/* Trip Options */}
-            <div className="flex items-center space-x-8 mb-8">
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center space-x-2">
-                  <input type="radio" name="tripType" defaultChecked className="text-blue-600" />
-                  <span className="font-medium text-gray-700">Round Trip</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input type="radio" name="tripType" className="text-blue-600" />
-                  <span className="font-medium text-gray-700">One Way</span>
-                </label>
+          {/* Search Section */}
+          <div id="search-section" className="mb-16">
+            <div className="max-w-2xl mx-auto mb-12">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleSearchKeyPress}
+                  placeholder="Search destinations worldwide..."
+                  className="w-full pl-12 pr-4 py-4 text-lg border border-gray-300 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm"
+                />
+                {searchQuery.trim() && (
+                  <button
+                    onClick={handleCustomSearch}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl transition-colors font-medium"
+                  >
+                    Search
+                  </button>
+                )}
               </div>
-              
-              <div className="flex items-center space-x-4">
-                <select className="border border-gray-300 rounded-lg px-4 py-2 font-medium text-gray-700">
-                  <option>02 Passengers</option>
-                  <option>01 Passenger</option>
-                  <option>03 Passengers</option>
-                  <option>04 Passengers</option>
-                </select>
-                
-                <select className="border border-gray-300 rounded-lg px-4 py-2 font-medium text-gray-700">
-                  <option>Business Class</option>
-                  <option>Economy Class</option>
-                  <option>First Class</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Search Form */}
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
-              {/* From */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">FROM</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={fromLocation}
-                    onChange={(e) => setFromLocation(e.target.value)}
-                    placeholder="Departure city"
-                    className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold text-lg"
-                  />
-                  <div className="absolute left-4 bottom-1 text-xs text-gray-500">
-                    {fromLocation && "Your Location"}
-                  </div>
-                </div>
-              </div>
-
-              {/* Swap Button */}
-              <div className="flex justify-center">
-                <button className="p-3 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
-                  <ArrowLeftRight className="w-5 h-5 text-gray-600" />
-                </button>
-              </div>
-
-              {/* To */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">TO</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyPress={handleSearchKeyPress}
-                    placeholder="Destination city"
-                    className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold text-lg"
-                  />
-                  <div className="absolute left-4 bottom-1 text-xs text-gray-500">
-                    {searchQuery && "Destination"}
-                  </div>
-                </div>
-              </div>
-
-              {/* Departure Date */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">DEPARTURE</label>
-                <div className="relative">
-                  <input
-                    type="date"
-                    value={preferences.arrivalDate}
-                    onChange={(e) => setPreferences(prev => ({ ...prev, arrivalDate: e.target.value }))}
-                    className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold text-lg"
-                  />
-                </div>
-              </div>
-
-              {/* Return Date */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">RETURN</label>
-                <div className="relative">
-                  <input
-                    type="date"
-                    value={preferences.departureDate}
-                    onChange={(e) => setPreferences(prev => ({ ...prev, departureDate: e.target.value }))}
-                    className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold text-lg"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Search Button */}
-            <div className="mt-8 flex justify-center">
-              <button
-                onClick={searchQuery.trim() ? handleCustomSearch : undefined}
-                className="bg-gray-900 hover:bg-gray-800 text-white px-12 py-4 rounded-xl font-bold text-lg transition-colors flex items-center space-x-3 shadow-lg"
-              >
-                <span>Search Flights</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Popular Destinations */}
-          <div className="mb-16">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-3xl font-bold text-gray-900">Popular Destination</h3>
-              <button className="text-blue-600 hover:text-blue-700 font-semibold flex items-center space-x-2">
-                <span>Explore All</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
             </div>
 
             {/* Category Filter */}
-            <div className="flex flex-wrap gap-4 mb-8">
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
               {categories.map((category) => {
                 const IconComponent = category.icon;
                 return (
@@ -394,6 +285,17 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                   </button>
                 );
               })}
+            </div>
+          </div>
+
+          {/* Popular Destinations */}
+          <div className="mb-16">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-3xl font-bold text-gray-900">Popular Destinations</h3>
+              <button className="text-blue-600 hover:text-blue-700 font-semibold flex items-center space-x-2">
+                <span>Explore All</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
 
             {/* Destinations Grid */}
@@ -572,7 +474,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">
-                    <Heart className="w-4 h-4 inline mr-2" />
+                    <TrendingUp className="w-4 h-4 inline mr-2" />
                     Interests (Select all that apply)
                   </label>
                   <div className="grid grid-cols-2 gap-2">
