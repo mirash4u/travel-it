@@ -216,7 +216,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
@@ -231,7 +231,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
           {/* Hero Section */}
           <div className="text-center mb-16">
             <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-              Hey Buddy! where are you
+              Hey Buddy! Where are you
               <br />
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Flying to?</span>
             </h2>
