@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Search, MapPin, Star, TrendingUp, Sparkles, Users, Calendar, DollarSign, ArrowRight, Globe, Plane, Camera, Mountain, Waves, Building2 } from 'lucide-react';
 import { AIItineraryRequest } from '../types';
-import { Logo } from './Logo';
+import { Navigation } from './Navigation';
+import { AuthModal } from './AuthModal';
 
 interface PopularDestination {
   id: string;
@@ -24,6 +25,8 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showPreferences, setShowPreferences] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authMode, setAuthMode] = useState<'signin' | 'register'>('signin');
   const [selectedDestination, setSelectedDestination] = useState<string>('');
   const [preferences, setPreferences] = useState({
     budget: '',
@@ -181,6 +184,37 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
     return categoryData ? categoryData.icon : Globe;
   };
 
+  const handleNavigation = (section: string) => {
+    switch (section) {
+      case 'signin':
+        setAuthMode('signin');
+        setShowAuthModal(true);
+        break;
+      case 'register':
+        setAuthMode('register');
+        setShowAuthModal(true);
+        break;
+      case 'packages':
+        // Handle holiday packages navigation
+        console.log('Navigate to holiday packages');
+        break;
+      case 'schedule':
+        // Handle flight schedule navigation
+        console.log('Navigate to flight schedule');
+        break;
+      case 'settings':
+        // Handle account settings navigation
+        console.log('Navigate to account settings');
+        break;
+      case 'booking':
+        // Handle manage booking navigation
+        console.log('Navigate to manage booking');
+        break;
+      default:
+        console.log('Navigate to:', section);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
       {/* Background Pattern */}
@@ -191,35 +225,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
       </div>
 
       <div className="relative z-10">
-        {/* Header */}
-        <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50">
-          <div className="max-w-7xl mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <Logo size="md" />
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900">TravelCraft</h1>
-                  <p className="text-sm text-gray-600">AI-Powered Journey Planning</p>
-                </div>
-              </div>
-              
-              <nav className="hidden md:flex items-center space-x-8">
-                <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Holiday Packages</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Flight Schedule</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Account Settings</a>
-                <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Manage Booking</a>
-              </nav>
-
-              <div className="flex items-center space-x-4">
-                <button className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Register</button>
-                <button className="bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-900 transition-colors">Sign In</button>
-                <select className="bg-transparent text-gray-700 font-medium">
-                  <option>EN</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </header>
+        <Navigation onNavigate={handleNavigation} />
 
         <div className="max-w-7xl mx-auto px-4 py-12">
           {/* Hero Section */}
@@ -519,6 +525,13 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
             </div>
           </div>
         )}
+
+        {/* Auth Modal */}
+        <AuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          initialMode={authMode}
+        />
       </div>
     </div>
   );
