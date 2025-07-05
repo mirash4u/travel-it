@@ -9,6 +9,7 @@ export interface Activity {
   cost?: string;
   location?: string;
   aiGenerated?: boolean;
+  image?: string;
 }
 
 export interface Note {

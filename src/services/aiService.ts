@@ -183,7 +183,8 @@ export class AIItineraryService {
           duration: "2-3 hours",
           category: "sightseeing",
           cost: "Free",
-          location: "Medina"
+          location: "Medina",
+          image: "https://images.pexels.com/photos/3889742/pexels-photo-3889742.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Explore Bahia Palace",
@@ -192,7 +193,8 @@ export class AIItineraryService {
           duration: "1.5 hours",
           category: "cultural",
           cost: "$7",
-          location: "Medina"
+          location: "Medina",
+          image: "https://images.pexels.com/photos/5591663/pexels-photo-5591663.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Traditional Moroccan Cooking Class",
@@ -201,7 +203,8 @@ export class AIItineraryService {
           duration: "3 hours",
           category: "dining",
           cost: "$45-65",
-          location: "Riad Cooking School"
+          location: "Riad Cooking School",
+          image: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Souk Shopping Adventure",
@@ -210,7 +213,8 @@ export class AIItineraryService {
           duration: "2 hours",
           category: "shopping",
           cost: "$20-100",
-          location: "Souk Semmarine"
+          location: "Souk Semmarine",
+          image: "https://images.pexels.com/photos/2166553/pexels-photo-2166553.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Majorelle Garden Visit",
@@ -219,7 +223,8 @@ export class AIItineraryService {
           duration: "1.5 hours",
           category: "relaxation",
           cost: "$7",
-          location: "Gueliz"
+          location: "Gueliz",
+          image: "https://images.pexels.com/photos/3889743/pexels-photo-3889743.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Sunset at Koutoubia Mosque",
@@ -228,7 +233,8 @@ export class AIItineraryService {
           duration: "1 hour",
           category: "cultural",
           cost: "Free",
-          location: "Medina"
+          location: "Medina",
+          image: "https://images.pexels.com/photos/3889741/pexels-photo-3889741.jpeg?auto=compress&cs=tinysrgb&w=400"
         }
       ],
       accommodations: [
@@ -284,7 +290,8 @@ Please return a JSON object with this exact structure:
       "duration": "X hours",
       "category": "sightseeing|dining|entertainment|shopping|outdoor|cultural|relaxation",
       "cost": "Price range or 'Free'",
-      "location": "Specific location"
+      "location": "Specific location",
+      "image": "https://images.pexels.com/photos/[relevant-photo-id]/pexels-photo-[id].jpeg?auto=compress&cs=tinysrgb&w=400"
     }
   ],
   "accommodations": [

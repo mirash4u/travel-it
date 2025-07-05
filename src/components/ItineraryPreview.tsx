@@ -129,7 +129,22 @@ export const ItineraryPreview: React.FC<ItineraryPreviewProps> = ({
                 {itinerary.activities.map((activity, index) => (
                   <div key={index} className="bg-gray-50 rounded-xl p-5 border border-gray-200 hover:shadow-md transition-shadow">
                     <div className="flex items-start space-x-4">
-                      <span className="text-2xl">{getCategoryIcon(activity.category)}</span>
+                      <div className="flex-shrink-0">
+                        {activity.image ? (
+                          <div className="relative">
+                            <img 
+                              src={activity.image} 
+                              alt={activity.name}
+                              className="w-16 h-16 rounded-lg object-cover"
+                            />
+                            <span className="absolute -top-1 -right-1 text-lg bg-white rounded-full p-1 shadow-sm">
+                              {getCategoryIcon(activity.category)}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-2xl">{getCategoryIcon(activity.category)}</span>
+                        )}
+                      </div>
                       <div className="flex-1">
                         <h4 className="font-bold text-lg text-gray-900">{activity.name}</h4>
                         <p className="text-gray-600 mt-2 leading-relaxed">{activity.description}</p>

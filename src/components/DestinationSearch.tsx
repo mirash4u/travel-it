@@ -102,13 +102,85 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
       id: '6',
       name: 'Marrakech',
       country: 'Morocco',
-      image: 'https://images.pexels.com/photos/739407/pexels-photo-739407.jpeg?auto=compress&cs=tinysrgb&w=800',
+      image: 'https://images.pexels.com/photos/3889742/pexels-photo-3889742.jpeg?auto=compress&cs=tinysrgb&w=800',
       rating: 4.5,
       description: 'Vibrant imperial city with bustling souks, palaces, and rich cultural heritage',
       category: 'cultural',
       popularActivities: ['Medina Tours', 'Souk Shopping', 'Palace Visits', 'Desert Trips'],
       bestTime: 'Oct-Apr',
       avgCost: '$60-120/day'
+    },
+    {
+      id: '7',
+      name: 'New York City',
+      country: 'USA',
+      image: 'https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=800',
+      rating: 4.7,
+      description: 'The city that never sleeps with iconic skyline, Broadway shows, and world-class dining',
+      category: 'city',
+      popularActivities: ['Times Square', 'Central Park', 'Statue of Liberty', 'Broadway Shows'],
+      bestTime: 'Apr-Jun, Sep-Nov',
+      avgCost: '$200-400/day'
+    },
+    {
+      id: '8',
+      name: 'Maldives',
+      country: 'Maldives',
+      image: 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=800',
+      rating: 4.9,
+      description: 'Pristine coral islands with crystal-clear waters and luxury overwater bungalows',
+      category: 'beach',
+      popularActivities: ['Snorkeling', 'Diving', 'Spa Treatments', 'Sunset Cruises'],
+      bestTime: 'Nov-Apr',
+      avgCost: '$300-800/day'
+    },
+    {
+      id: '9',
+      name: 'Rome',
+      country: 'Italy',
+      image: 'https://images.pexels.com/photos/2064827/pexels-photo-2064827.jpeg?auto=compress&cs=tinysrgb&w=800',
+      rating: 4.6,
+      description: 'Eternal city with ancient ruins, Renaissance art, and incredible Italian cuisine',
+      category: 'cultural',
+      popularActivities: ['Colosseum', 'Vatican City', 'Trevi Fountain', 'Roman Forum'],
+      bestTime: 'Apr-Jun, Sep-Oct',
+      avgCost: '$100-200/day'
+    },
+    {
+      id: '10',
+      name: 'Dubai',
+      country: 'UAE',
+      image: 'https://images.pexels.com/photos/1470502/pexels-photo-1470502.jpeg?auto=compress&cs=tinysrgb&w=800',
+      rating: 4.5,
+      description: 'Futuristic city with luxury shopping, modern architecture, and desert adventures',
+      category: 'city',
+      popularActivities: ['Burj Khalifa', 'Desert Safari', 'Gold Souk', 'Palm Jumeirah'],
+      bestTime: 'Nov-Mar',
+      avgCost: '$150-350/day'
+    },
+    {
+      id: '11',
+      name: 'Iceland',
+      country: 'Iceland',
+      image: 'https://images.pexels.com/photos/1433052/pexels-photo-1433052.jpeg?auto=compress&cs=tinysrgb&w=800',
+      rating: 4.8,
+      description: 'Land of fire and ice with dramatic landscapes, geysers, and Northern Lights',
+      category: 'adventure',
+      popularActivities: ['Blue Lagoon', 'Golden Circle', 'Northern Lights', 'Glacier Hiking'],
+      bestTime: 'Jun-Aug, Sep-Mar',
+      avgCost: '$150-300/day'
+    },
+    {
+      id: '12',
+      name: 'Thailand',
+      country: 'Thailand',
+      image: 'https://images.pexels.com/photos/1007657/pexels-photo-1007657.jpeg?auto=compress&cs=tinysrgb&w=800',
+      rating: 4.7,
+      description: 'Exotic kingdom with golden temples, tropical beaches, and delicious street food',
+      category: 'cultural',
+      popularActivities: ['Temple Tours', 'Thai Massage', 'Street Food', 'Island Hopping'],
+      bestTime: 'Nov-Mar',
+      avgCost: '$40-100/day'
     }
   ];
 
@@ -308,7 +380,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
             </div>
 
             {/* Destinations Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredDestinations.map((destination) => {
                 const IconComponent = getCategoryIcon(destination.category);
                 return (

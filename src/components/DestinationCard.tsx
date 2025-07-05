@@ -190,7 +190,22 @@ export const DestinationCard: React.FC<DestinationCardProps> = ({
                   }`}
                 >
                   {activity.aiGenerated && (
-                    <span className="text-2xl mt-1">{getCategoryIcon(activity.category)}</span>
+                    <div className="flex-shrink-0">
+                      {activity.image ? (
+                        <div className="relative">
+                          <img 
+                            src={activity.image} 
+                            alt={activity.name}
+                            className="w-12 h-12 rounded-lg object-cover"
+                          />
+                          <span className="absolute -top-1 -right-1 text-sm bg-white rounded-full p-1 shadow-sm">
+                            {getCategoryIcon(activity.category)}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-2xl mt-1">{getCategoryIcon(activity.category)}</span>
+                      )}
+                    </div>
                   )}
                   <button
                     onClick={() => toggleActivity(activity.id)}
