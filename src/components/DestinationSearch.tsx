@@ -216,41 +216,32 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-40 h-40 bg-purple-500 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-cyan-500 rounded-full blur-2xl"></div>
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-10 right-10 w-64 h-64 bg-blue-400 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 left-10 w-48 h-48 bg-purple-400 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative z-10">
         <Navigation onNavigate={handleNavigation} />
 
-        <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="max-w-6xl mx-auto px-4 py-8">
           {/* Hero Section */}
-          <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
               Hey Buddy! Where are you
               <br />
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Flying to?</span>
             </h2>
-            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
               Discover amazing destinations and let our AI create the perfect itinerary for your next adventure
             </p>
-            
-            <button
-              onClick={() => document.getElementById('search-section')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-colors shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-2 mx-auto"
-            >
-              <span>Explore Now</span>
-              <ArrowRight className="w-5 h-5" />
-            </button>
           </div>
 
           {/* Search Section */}
-          <div id="search-section" className="mb-16">
-            <div className="max-w-2xl mx-auto mb-12">
+          <div className="mb-12">
+            <div className="max-w-2xl mx-auto mb-8">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
                 <input
@@ -273,14 +264,14 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
             </div>
 
             {/* Category Filter */}
-            <div className="flex flex-wrap justify-center gap-4 mb-12">
+            <div className="flex flex-wrap justify-center gap-3 mb-10">
               {categories.map((category) => {
                 const IconComponent = category.icon;
                 return (
                   <button
                     key={category.id}
                     onClick={() => setSelectedCategory(category.id)}
-                    className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${
+                    className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
                       selectedCategory === category.id
                         ? 'bg-blue-600 text-white shadow-lg'
                         : 'bg-white text-gray-700 hover:bg-blue-50 border border-gray-200'
@@ -295,12 +286,12 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
           </div>
 
           {/* Popular Destinations */}
-          <div className="mb-16">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-3xl font-bold text-gray-900">Popular Destinations</h3>
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">Popular Destinations</h3>
               <button 
                 onClick={() => setSelectedCategory('all')}
-                className="text-blue-600 hover:text-blue-700 font-semibold flex items-center space-x-2 transition-colors"
+                className="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-1 transition-colors"
               >
                 <span>Explore All</span>
                 <ArrowRight className="w-4 h-4" />
@@ -308,7 +299,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
             </div>
 
             {/* Destinations Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredDestinations.map((destination) => {
                 const IconComponent = getCategoryIcon(destination.category);
                 return (
@@ -317,7 +308,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                     className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-[1.02]"
                     onClick={() => handleDestinationSelect(destination.name)}
                   >
-                    <div className="relative h-48 overflow-hidden">
+                    <div className="relative h-40 overflow-hidden">
                       <img
                         src={destination.image}
                         alt={destination.name}
@@ -340,7 +331,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                       </div>
 
                       <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-xl font-bold text-white mb-1">{destination.name}</h3>
+                        <h3 className="text-lg font-bold text-white mb-1">{destination.name}</h3>
                         <p className="text-white/90">{destination.country}</p>
                       </div>
                     </div>
@@ -348,7 +339,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                     <div className="p-6">
                       <p className="text-gray-600 mb-4 line-clamp-2">{destination.description}</p>
 
-                      <div className="space-y-2 mb-4">
+                      <div className="space-y-1 mb-3">
                         <div className="flex items-center text-sm text-gray-600">
                           <Calendar className="w-4 h-4 mr-2 text-green-500" />
                           <span>Best time: {destination.bestTime}</span>
@@ -359,7 +350,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 mb-4">
+                      <div className="flex flex-wrap gap-1 mb-4">
                         {destination.popularActivities.slice(0, 3).map((activity, index) => (
                           <span
                             key={index}
@@ -375,7 +366,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                         )}
                       </div>
 
-                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl transition-colors font-medium flex items-center justify-center space-x-2">
+                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors font-medium flex items-center justify-center space-x-2">
                         <Sparkles className="w-4 h-4" />
                         <span>Generate AI Itinerary</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -389,17 +380,17 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
 
           {/* Custom Search Result */}
           {searchQuery.trim() && filteredDestinations.length === 0 && (
-            <div className="text-center py-16">
-              <div className="p-6 bg-blue-100 rounded-full w-32 h-32 mx-auto mb-6 flex items-center justify-center">
-                <Globe className="w-16 h-16 text-blue-600" />
+            <div className="text-center py-12">
+              <div className="p-4 bg-blue-100 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                <Globe className="w-10 h-10 text-blue-600" />
               </div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Ready to explore "{searchQuery}"?</h3>
-              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Ready to explore "{searchQuery}"?</h3>
+              <p className="text-lg text-gray-600 mb-6 max-w-xl mx-auto">
                 Let our AI create a personalized itinerary for your destination
               </p>
               <button
                 onClick={handleCustomSearch}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-3 mx-auto"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg transition-all duration-200 font-semibold flex items-center space-x-2 mx-auto"
               >
                 <Sparkles className="w-6 h-6" />
                 <span>Generate AI Itinerary for {searchQuery}</span>
@@ -412,13 +403,13 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
         {/* Preferences Modal */}
         {showPreferences && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
               <div className="p-6 border-b border-gray-200">
-                <h2 className="text-2xl font-bold text-gray-900">Plan Your Trip to {selectedDestination}</h2>
+                <h2 className="text-xl font-bold text-gray-900">Plan Your Trip to {selectedDestination}</h2>
                 <p className="text-gray-600 mt-1">Tell us your preferences to create the perfect itinerary</p>
               </div>
 
-              <div className="p-6 space-y-6">
+              <div className="p-6 space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -451,12 +442,12 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                     <DollarSign className="w-4 h-4 inline mr-2" />
                     Budget Range
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-3">
                     {['Budget ($)', 'Mid-range ($$)', 'Luxury ($$$)', 'No preference'].map((option) => (
                       <button
                         key={option}
                         onClick={() => setPreferences(prev => ({ ...prev, budget: option }))}
-                        className={`p-3 text-sm rounded-lg border transition-colors ${
+                        className={`p-2 text-sm rounded-lg border transition-colors ${
                           preferences.budget === option
                             ? 'bg-blue-500 text-white border-blue-500'
                             : 'bg-white text-gray-700 border-gray-300 hover:border-blue-300'
@@ -488,12 +479,12 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                     <TrendingUp className="w-4 h-4 inline mr-2" />
                     Interests (Select all that apply)
                   </label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-3">
                     {interestOptions.map((interest) => (
                       <button
                         key={interest}
                         onClick={() => toggleInterest(interest)}
-                        className={`p-3 text-sm rounded-lg border transition-colors text-left ${
+                        className={`p-2 text-sm rounded-lg border transition-colors text-left ${
                           preferences.interests.includes(interest)
                             ? 'bg-blue-500 text-white border-blue-500'
                             : 'bg-white text-gray-700 border-gray-300 hover:border-blue-300'
@@ -505,20 +496,19 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                   </div>
                 </div>
 
-                <div className="flex space-x-3 pt-4">
+                <div className="flex space-x-3 pt-2">
                   <button
                     onClick={() => setShowPreferences(false)}
-                    className="flex-1 px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors font-medium"
+                    className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors font-medium"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleGenerateItinerary}
-                    className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 font-medium flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+                    className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center space-x-2"
                   >
                     <Sparkles className="w-5 h-5" />
                     <span>Generate Itinerary</span>
-                    <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
