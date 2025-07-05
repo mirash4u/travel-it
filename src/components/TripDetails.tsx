@@ -5,6 +5,7 @@ import { DestinationCard } from './DestinationCard';
 import { AIItineraryGenerator } from './AIItineraryGenerator';
 import { AIItineraryPreview } from './AIItineraryPreview';
 import { AIItineraryService } from '../services/aiService';
+import { ProcessingTracker } from './ProcessingTracker';
 
 interface TripDetailsProps {
   trip: Trip;
@@ -24,6 +25,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onUpdateTrip, on
     arrivalDate: '',
     departureDate: ''
   });
+  const [showProcessingTracker, setShowProcessingTracker] = useState(false);
 
   const addDestination = () => {
     if (newDestination.name.trim()) {
@@ -54,11 +56,15 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onUpdateTrip, on
 
   const handleAIGeneration = async (request: AIItineraryRequest) => {
     setIsGeneratingAI(true);
+    setShowProcessingTracker(true);
+    
     try {
       const response = await AIItineraryService.generateItinerary(request);
+      setShowProcessingTracker(false);
       setAiItinerary(response);
     } catch (error) {
       console.error('Failed to generate AI itinerary:', error);
+      setShowProcessingTracker(false);
     } finally {
       setIsGeneratingAI(false);
     }
@@ -521,6 +527,13 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onUpdateTrip, on
             </div>
           </div>
         )}
+        
+        {/* Processing Tracker */}
+        <ProcessingTracker 
+          isVisible={showProcessingTracker}
+          destination={currentDestinationForAI}
+          onComplete={() => {}}
+        />
       </div>
     </div>
   );

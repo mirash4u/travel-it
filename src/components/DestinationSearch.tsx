@@ -263,6 +263,16 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
     // Close the preferences modal
     setShowPreferences(false);
     
+    // Reset form state
+    setSelectedDestination('');
+    setPreferences({
+      budget: '',
+      travelers: 2,
+      interests: [] as string[],
+      arrivalDate: '',
+      departureDate: ''
+    });
+    
     // Call the parent handler
     onGenerateItinerary(selectedDestination, request);
   };

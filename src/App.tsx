@@ -6,6 +6,7 @@ import { DestinationSearch } from './components/DestinationSearch';
 import { ItineraryPreview } from './components/ItineraryPreview';
 import { AIItineraryService } from './services/aiService';
 import { UserProfile } from './components/UserProfile';
+import { ProcessingTracker } from './components/ProcessingTracker';
 
 function App() {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -15,15 +16,23 @@ function App() {
   const [currentPreferences, setCurrentPreferences] = useState<AIItineraryRequest | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showUserProfile, setShowUserProfile] = useState(false);
+  const [showProcessingTracker, setShowProcessingTracker] = useState(false);
+  const [processingDestination, setProcessingDestination] = useState('');
 
   const handleGenerateItinerary = async (destination: string, preferences: AIItineraryRequest) => {
     console.log('App: Starting itinerary generation for:', destination);
     console.log('App: Preferences:', preferences);
     setIsGenerating(true);
     setCurrentPreferences(preferences);
+    setProcessingDestination(destination);
+    setShowProcessingTracker(true);
+    
     try {
       const response = await AIItineraryService.generateItinerary(preferences);
       console.log('App: Received AI response:', response);
+      
+      // Hide processing tracker before showing results
+      setShowProcessingTracker(false);
       setGeneratedItinerary(response);
       setCurrentView('itinerary');
     } catch (error) {
@@ -39,6 +48,7 @@ function App() {
       }
     } finally {
       setIsGenerating(false);
+      setShowProcessingTracker(false);
     }
   };
 
@@ -129,6 +139,11 @@ function App() {
     setShowUserProfile(false);
   };
 
+  const handleProcessingComplete = () => {
+    // This will be called when the processing animation completes
+    // The actual API call continues in the background
+  };
+
   // Prevent flickering by ensuring stable rendering
   const renderCurrentView = () => {
     switch (currentView) {
@@ -198,6 +213,13 @@ function App() {
       {showUserProfile && (
         <UserProfile onClose={handleCloseProfile} />
       )}
+      
+      {/* Processing Tracker */}
+      <ProcessingTracker 
+        isVisible={showProcessingTracker}
+        destination={processingDestination}
+        onComplete={handleProcessingComplete}
+      />
     </div>
   );
 }
