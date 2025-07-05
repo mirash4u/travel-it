@@ -258,7 +258,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                 {searchQuery.trim() && (
                   <button
                     onClick={handleCustomSearch}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl transition-colors font-medium"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors font-medium text-sm"
                   >
                     Search
                   </button>
@@ -292,7 +292,10 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
           <div className="mb-16">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-3xl font-bold text-gray-900">Popular Destinations</h3>
-              <button className="text-blue-600 hover:text-blue-700 font-semibold flex items-center space-x-2">
+              <button 
+                onClick={() => setSelectedCategory('all')}
+                className="text-blue-600 hover:text-blue-700 font-semibold flex items-center space-x-2 transition-colors"
+              >
                 <span>Explore All</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
@@ -369,6 +372,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                       <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl transition-colors font-medium flex items-center justify-center space-x-2">
                         <Sparkles className="w-4 h-4" />
                         <span>Generate AI Itinerary</span>
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </button>
                     </div>
                   </div>
@@ -389,10 +393,11 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
               </p>
               <button
                 onClick={handleCustomSearch}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl transition-colors font-bold text-lg shadow-lg flex items-center space-x-3 mx-auto"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl transition-all duration-200 font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center space-x-3 mx-auto"
               >
                 <Sparkles className="w-6 h-6" />
                 <span>Generate AI Itinerary for {searchQuery}</span>
+                <ArrowRight className="w-5 h-5" />
               </button>
             </div>
           )}
@@ -497,16 +502,17 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                 <div className="flex space-x-3 pt-4">
                   <button
                     onClick={() => setShowPreferences(false)}
-                    className="flex-1 px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors font-medium"
+                    className="flex-1 px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors font-medium"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleGenerateItinerary}
-                    className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center space-x-2"
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl transition-all duration-200 font-medium flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
                   >
                     <Sparkles className="w-5 h-5" />
                     <span>Generate Itinerary</span>
+                    <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </div>
