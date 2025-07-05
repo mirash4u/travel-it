@@ -98,46 +98,78 @@ function App() {
     setCurrentView('search');
     setGeneratedItinerary(null);
     setCurrentPreferences(null);
+    setSelectedTrip(null);
   };
 
   const goToTrips = () => {
     setCurrentView('trips');
+    setGeneratedItinerary(null);
+    setCurrentPreferences(null);
   };
 
+  // Prevent flickering by ensuring stable rendering
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'search':
+        return (
+          <DestinationSearch 
+            onGenerateItinerary={handleGenerateItinerary}
+            onGoToTrips={goToTrips}
+          />
+        );
+      
+      case 'itinerary':
+        if (!generatedItinerary || !currentPreferences) {
+          setCurrentView('search');
+          return null;
+        }
+        return (
+          <ItineraryPreview
+            itinerary={generatedItinerary}
+            destination={currentPreferences.destination}
+            preferences={currentPreferences}
+            onCreateTrip={handleCreateTripFromItinerary}
+            onRegenerate={() => handleGenerateItinerary(currentPreferences.destination, currentPreferences)}
+            onBack={goBackToSearch}
+            isGenerating={isGenerating}
+          />
+        );
+      
+      case 'trips':
+        return (
+          <TripsList
+            trips={trips}
+            onSelectTrip={selectTrip}
+            onAddTrip={addTrip}
+            onBackToSearch={goBackToSearch}
+          />
+        );
+      
+      case 'trip-details':
+        if (!selectedTrip) {
+          setCurrentView('trips');
+          return null;
+        }
+        return (
+          <TripDetails
+            trip={selectedTrip}
+            onUpdateTrip={updateTrip}
+            onBack={goBackToTrips}
+          />
+        );
+      
+      default:
+        return (
+          <DestinationSearch 
+            onGenerateItinerary={handleGenerateItinerary}
+            onGoToTrips={goToTrips}
+          />
+        );
+    }
+  };
   return (
-    <div className="min-h-screen">
-      {currentView === 'search' && (
-        <DestinationSearch onGenerateItinerary={handleGenerateItinerary} />
-      )}
-      
-      {currentView === 'itinerary' && generatedItinerary && currentPreferences && (
-        <ItineraryPreview
-          itinerary={generatedItinerary}
-          destination={currentPreferences.destination}
-          preferences={currentPreferences}
-          onCreateTrip={handleCreateTripFromItinerary}
-          onRegenerate={() => handleGenerateItinerary(currentPreferences.destination, currentPreferences)}
-          onBack={goBackToSearch}
-          isGenerating={isGenerating}
-        />
-      )}
-      
-      {currentView === 'trips' && (
-        <TripsList
-          trips={trips}
-          onSelectTrip={selectTrip}
-          onAddTrip={addTrip}
-          onBackToSearch={goBackToSearch}
-        />
-      )}
-      
-      {currentView === 'trip-details' && selectedTrip && (
-        <TripDetails
-          trip={selectedTrip}
-          onUpdateTrip={updateTrip}
-          onBack={goBackToTrips}
-        />
-      )}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {renderCurrentView()}
     </div>
   );
 }

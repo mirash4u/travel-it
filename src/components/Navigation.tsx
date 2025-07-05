@@ -15,6 +15,7 @@ export const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
   const navigationItems = [
     { id: 'packages', label: 'Holiday Packages', icon: Package },
     { id: 'schedule', label: 'Flight Schedule', icon: Calendar },
+    { id: 'trips', label: 'My Trips', icon: Calendar },
     { id: 'settings', label: 'Account Settings', icon: Settings },
     { id: 'booking', label: 'Manage Booking', icon: Calendar }
   ];

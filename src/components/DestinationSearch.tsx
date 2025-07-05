@@ -19,9 +19,10 @@ interface PopularDestination {
 
 interface DestinationSearchProps {
   onGenerateItinerary: (destination: string, preferences: AIItineraryRequest) => void;
+  onGoToTrips?: () => void;
 }
 
-export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerateItinerary }) => {
+export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerateItinerary, onGoToTrips }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showPreferences, setShowPreferences] = useState(false);
@@ -194,6 +195,11 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
         setAuthMode('register');
         setShowAuthModal(true);
         break;
+      case 'trips':
+        if (onGoToTrips) {
+          onGoToTrips();
+        }
+        break;
       case 'packages':
         // Handle holiday packages navigation
         console.log('Navigate to holiday packages');
@@ -216,7 +222,7 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 right-10 w-64 h-64 bg-blue-400 rounded-full blur-3xl"></div>
