@@ -25,8 +25,9 @@ function App() {
       setCurrentView('itinerary');
     } catch (error) {
       console.error('Failed to generate itinerary:', error);
-      // Show user-friendly error message
-      alert('Failed to generate itinerary. Please check your AI configuration or try again.');
+      // Show user-friendly error message with specific details
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      alert(`Failed to generate itinerary: ${errorMessage}\n\nPlease check your AI configuration in the .env file or try again.`);
     } finally {
       setIsGenerating(false);
     }

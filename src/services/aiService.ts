@@ -10,10 +10,10 @@ interface AIConfig {
 
 // Default configuration - you can modify this
 const AI_CONFIG: AIConfig = {
-  provider: (import.meta.env.VITE_AI_PROVIDER as any) || 'openai', // Change to your preferred provider
-  apiKey: import.meta.env.VITE_AI_API_KEY || '', // Set your API key in .env
-  model: import.meta.env.VITE_AI_MODEL || 'gpt-4', // or 'gpt-3.5-turbo', 'claude-3-sonnet', etc.
-  baseUrl: import.meta.env.VITE_AI_BASE_URL // Optional custom endpoint
+  provider: (import.meta.env.VITE_AI_PROVIDER as any) || 'openai',
+  apiKey: import.meta.env.VITE_AI_API_KEY || '',
+  model: import.meta.env.VITE_AI_MODEL || 'gpt-4',
+  baseUrl: import.meta.env.VITE_AI_BASE_URL
 };
 
 export class AIItineraryService {
@@ -28,38 +28,29 @@ export class AIItineraryService {
     });
 
     if (!apiKey) {
-      console.warn('No AI API key found in environment variables. Using mock data.');
-      console.log('Available environment variables:', {
-        VITE_AI_PROVIDER: import.meta.env.VITE_AI_PROVIDER,
-        VITE_AI_MODEL: import.meta.env.VITE_AI_MODEL,
-        VITE_AI_BASE_URL: import.meta.env.VITE_AI_BASE_URL,
-        hasApiKey: !!import.meta.env.VITE_AI_API_KEY
-      });
-      return this.getMockResponse();
+      throw new Error('AI API key is required. Please set VITE_AI_API_KEY in your .env file.');
     }
 
-    try {
-      switch (provider) {
-        case 'openai':
-          return await this.callOpenAI(prompt, apiKey, model, baseUrl);
-        case 'anthropic':
-          return await this.callAnthropic(prompt, apiKey, model);
-        case 'google':
-          return await this.callGoogle(prompt, apiKey, model);
-        case 'custom':
-          return await this.callCustomAPI(prompt, apiKey, model, baseUrl);
-        default:
-          throw new Error(`Unsupported AI provider: ${provider}`);
-      }
-    } catch (error) {
-      console.error('AI API call failed:', error);
-      console.warn('Falling back to mock data');
-      return this.getMockResponse();
+    console.log('Making AI API call with provider:', provider);
+
+    switch (provider) {
+      case 'openai':
+        return await this.callOpenAI(prompt, apiKey, model, baseUrl);
+      case 'anthropic':
+        return await this.callAnthropic(prompt, apiKey, model);
+      case 'google':
+        return await this.callGoogle(prompt, apiKey, model);
+      case 'custom':
+        return await this.callCustomAPI(prompt, apiKey, model, baseUrl);
+      default:
+        throw new Error(`Unsupported AI provider: ${provider}`);
     }
   }
 
   private static async callOpenAI(prompt: string, apiKey: string, model: string, baseUrl?: string): Promise<string> {
     const url = baseUrl || 'https://api.openai.com/v1/chat/completions';
+    
+    console.log('Calling OpenAI API:', { url, model });
     
     const response = await fetch(url, {
       method: 'POST',
@@ -72,7 +63,12 @@ export class AIItineraryService {
         messages: [
           {
             role: 'system',
-            content: 'You are a travel expert AI that creates detailed itineraries. Return only valid JSON in the exact format requested.'
+            content: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
+
+The JSON must include real, high-quality Pexels image URLs for each activity. Use this format for images:
+https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+
+Make sure all image URLs are valid Pexels URLs that show relevant attractions, landmarks, or activities for the destination.`
           },
           {
             role: 'user',
@@ -80,19 +76,24 @@ export class AIItineraryService {
           }
         ],
         temperature: 0.7,
-        max_tokens: 2000
+        max_tokens: 3000
       })
     });
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('OpenAI API Error Response:', errorText);
+      throw new Error(`OpenAI API error: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('OpenAI API Response:', data);
     return data.choices[0].message.content;
   }
 
   private static async callAnthropic(prompt: string, apiKey: string, model: string): Promise<string> {
+    console.log('Calling Anthropic API:', { model });
+    
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -102,25 +103,37 @@ export class AIItineraryService {
       },
       body: JSON.stringify({
         model,
-        max_tokens: 2000,
+        max_tokens: 3000,
         messages: [
           {
             role: 'user',
-            content: prompt
+            content: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
+
+The JSON must include real, high-quality Pexels image URLs for each activity. Use this format for images:
+https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+
+Make sure all image URLs are valid Pexels URLs that show relevant attractions, landmarks, or activities for the destination.
+
+${prompt}`
           }
         ]
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Anthropic API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('Anthropic API Error Response:', errorText);
+      throw new Error(`Anthropic API error: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('Anthropic API Response:', data);
     return data.content[0].text;
   }
 
   private static async callGoogle(prompt: string, apiKey: string, model: string): Promise<string> {
+    console.log('Calling Google AI API:', { model });
+    
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
       method: 'POST',
       headers: {
@@ -131,7 +144,14 @@ export class AIItineraryService {
           {
             parts: [
               {
-                text: prompt
+                text: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
+
+The JSON must include real, high-quality Pexels image URLs for each activity. Use this format for images:
+https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+
+Make sure all image URLs are valid Pexels URLs that show relevant attractions, landmarks, or activities for the destination.
+
+${prompt}`
               }
             ]
           }
@@ -140,10 +160,13 @@ export class AIItineraryService {
     });
 
     if (!response.ok) {
-      throw new Error(`Google AI API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('Google AI API Error Response:', errorText);
+      throw new Error(`Google AI API error: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('Google AI API Response:', data);
     return data.candidates[0].content.parts[0].text;
   }
 
@@ -151,6 +174,8 @@ export class AIItineraryService {
     if (!baseUrl) {
       throw new Error('Custom API requires baseUrl to be configured');
     }
+
+    console.log('Calling Custom API:', { baseUrl, model });
 
     const response = await fetch(baseUrl, {
       method: 'POST',
@@ -160,108 +185,27 @@ export class AIItineraryService {
       },
       body: JSON.stringify({
         model,
-        prompt,
-        max_tokens: 2000
+        prompt: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
+
+The JSON must include real, high-quality Pexels image URLs for each activity. Use this format for images:
+https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
+
+Make sure all image URLs are valid Pexels URLs that show relevant attractions, landmarks, or activities for the destination.
+
+${prompt}`,
+        max_tokens: 3000
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Custom API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('Custom API Error Response:', errorText);
+      throw new Error(`Custom API error: ${response.status} ${response.statusText} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('Custom API Response:', data);
     return data.response || data.text || data.content;
-  }
-
-  private static getMockResponse(): string {
-    return JSON.stringify({
-      activities: [
-        {
-          name: "Visit Jemaa el-Fnaa Square",
-          description: "Experience the heart of Marrakech with street performers, food stalls, and vibrant atmosphere",
-          time: "09:00",
-          duration: "2-3 hours",
-          category: "sightseeing",
-          cost: "Free",
-          location: "Medina",
-          image: "https://images.pexels.com/photos/3889742/pexels-photo-3889742.jpeg?auto=compress&cs=tinysrgb&w=400"
-        },
-        {
-          name: "Explore Bahia Palace",
-          description: "Marvel at stunning Moroccan architecture and intricate tile work",
-          time: "10:30",
-          duration: "1.5 hours",
-          category: "cultural",
-          cost: "$7",
-          location: "Medina",
-          image: "https://images.pexels.com/photos/5591663/pexels-photo-5591663.jpeg?auto=compress&cs=tinysrgb&w=400"
-        },
-        {
-          name: "Traditional Moroccan Cooking Class",
-          description: "Learn to prepare authentic tagines and couscous with local spices",
-          time: "11:30",
-          duration: "3 hours",
-          category: "dining",
-          cost: "$45-65",
-          location: "Riad Cooking School",
-          image: "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400"
-        },
-        {
-          name: "Souk Shopping Adventure",
-          description: "Navigate the bustling markets for spices, textiles, and handcrafted goods",
-          time: "14:00",
-          duration: "2 hours",
-          category: "shopping",
-          cost: "$20-100",
-          location: "Souk Semmarine",
-          image: "https://images.pexels.com/photos/2166553/pexels-photo-2166553.jpeg?auto=compress&cs=tinysrgb&w=400"
-        },
-        {
-          name: "Majorelle Garden Visit",
-          description: "Stroll through the famous blue garden and Berber Museum",
-          time: "16:00",
-          duration: "1.5 hours",
-          category: "relaxation",
-          cost: "$7",
-          location: "Gueliz",
-          image: "https://images.pexels.com/photos/3889743/pexels-photo-3889743.jpeg?auto=compress&cs=tinysrgb&w=400"
-        },
-        {
-          name: "Sunset at Koutoubia Mosque",
-          description: "Admire the iconic minaret and enjoy the evening call to prayer",
-          time: "18:30",
-          duration: "1 hour",
-          category: "cultural",
-          cost: "Free",
-          location: "Medina",
-          image: "https://images.pexels.com/photos/3889741/pexels-photo-3889741.jpeg?auto=compress&cs=tinysrgb&w=400"
-        }
-      ],
-      accommodations: [
-        {
-          name: "Riad Yasmine",
-          type: "riad",
-          priceRange: "$80-120/night",
-          rating: 4.5,
-          description: "Traditional riad with rooftop terrace and authentic Moroccan decor"
-        },
-        {
-          name: "La Mamounia",
-          type: "hotel",
-          priceRange: "$400-800/night",
-          rating: 4.8,
-          description: "Legendary luxury palace hotel with world-class spa and gardens"
-        },
-        {
-          name: "Dar Anika",
-          type: "guesthouse",
-          priceRange: "$45-75/night",
-          rating: 4.2,
-          description: "Charming family-run guesthouse in the heart of the medina"
-        }
-      ],
-      overview: "An immersive Marrakech experience combining imperial history, vibrant souks, traditional cuisine, and stunning Islamic architecture in Morocco's red city."
-    });
   }
 
   private static createPrompt(request: AIItineraryRequest): string {
@@ -280,42 +224,85 @@ Requirements:
 - Arrival: ${request.arrivalDate || 'Flexible'}
 - Departure: ${request.departureDate || 'Flexible'}
 
-Please return a JSON object with this exact structure:
+Return ONLY a JSON object with this exact structure (no additional text):
 {
   "activities": [
     {
       "name": "Activity name",
-      "description": "Detailed description",
-      "time": "HH:MM format",
-      "duration": "X hours",
+      "description": "Detailed description of the activity",
+      "time": "HH:MM format (e.g., 09:00)",
+      "duration": "X hours or X-Y hours",
       "category": "sightseeing|dining|entertainment|shopping|outdoor|cultural|relaxation",
-      "cost": "Price range or 'Free'",
-      "location": "Specific location",
-      "image": "https://images.pexels.com/photos/[relevant-photo-id]/pexels-photo-[id].jpeg?auto=compress&cs=tinysrgb&w=400"
+      "cost": "Price range (e.g., $10-20) or 'Free'",
+      "location": "Specific location or area",
+      "image": "https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400"
     }
   ],
   "accommodations": [
     {
       "name": "Hotel/accommodation name",
-      "type": "hotel|hostel|airbnb|resort|guesthouse",
-      "priceRange": "Price per night",
+      "type": "hotel|hostel|airbnb|resort|guesthouse|riad",
+      "priceRange": "Price per night (e.g., $80-120/night)",
       "rating": 4.5,
-      "description": "Brief description"
+      "description": "Brief description of the accommodation"
     }
   ],
-  "overview": "A comprehensive overview of the itinerary"
+  "overview": "A comprehensive 2-3 sentence overview of the itinerary highlighting the main experiences"
 }
 
-Create ${Math.max(6, days * 2)} activities and 3-4 accommodation options. Focus on authentic local experiences that match the specified interests and budget.`;
+Requirements:
+- Create ${Math.max(6, days * 2)} diverse activities spread across different times of day
+- Include 3-4 accommodation options at different price points
+- Each activity must have a valid Pexels image URL showing the actual attraction/activity
+- Focus on authentic local experiences that match the specified interests and budget
+- Ensure activities are logically sequenced by time
+- Include a mix of categories: sightseeing, dining, cultural, shopping, etc.
+- Provide realistic costs and durations
+- Use specific location names within the destination`;
   }
 
   static async generateItinerary(request: AIItineraryRequest): Promise<AIItineraryResponse> {
+    console.log('Generating itinerary for request:', request);
+    
     try {
       const prompt = this.createPrompt(request);
+      console.log('Generated prompt:', prompt);
+      
       const aiResponse = await this.callAI(prompt);
+      console.log('Raw AI response:', aiResponse);
+      
+      // Clean the response to ensure it's valid JSON
+      let cleanedResponse = aiResponse.trim();
+      
+      // Remove any markdown code blocks
+      if (cleanedResponse.startsWith('```json')) {
+        cleanedResponse = cleanedResponse.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+      } else if (cleanedResponse.startsWith('```')) {
+        cleanedResponse = cleanedResponse.replace(/^```\s*/, '').replace(/\s*```$/, '');
+      }
       
       // Parse the AI response
-      const parsedResponse = JSON.parse(aiResponse);
+      let parsedResponse;
+      try {
+        parsedResponse = JSON.parse(cleanedResponse);
+      } catch (parseError) {
+        console.error('JSON Parse Error:', parseError);
+        console.error('Cleaned response:', cleanedResponse);
+        throw new Error('AI returned invalid JSON format. Please try again.');
+      }
+      
+      // Validate the response structure
+      if (!parsedResponse.activities || !Array.isArray(parsedResponse.activities)) {
+        throw new Error('AI response missing activities array');
+      }
+      
+      if (!parsedResponse.accommodations || !Array.isArray(parsedResponse.accommodations)) {
+        throw new Error('AI response missing accommodations array');
+      }
+      
+      if (!parsedResponse.overview) {
+        throw new Error('AI response missing overview');
+      }
       
       // Add aiGenerated flag to all items
       const activities = parsedResponse.activities.map((activity: any) => ({
@@ -328,27 +315,24 @@ Create ${Math.max(6, days * 2)} activities and 3-4 accommodation options. Focus 
         aiGenerated: true
       }));
 
-      return {
+      const result = {
         activities,
         accommodations,
         overview: parsedResponse.overview
       };
+      
+      console.log('Final processed result:', result);
+      return result;
+      
     } catch (error) {
       console.error('Error generating itinerary:', error);
       
-      // Fallback to mock data if AI fails
-      const mockResponse = JSON.parse(this.getMockResponse());
-      return {
-        activities: mockResponse.activities.map((activity: any) => ({
-          ...activity,
-          aiGenerated: true
-        })),
-        accommodations: mockResponse.accommodations.map((accommodation: any) => ({
-          ...accommodation,
-          aiGenerated: true
-        })),
-        overview: mockResponse.overview
-      };
+      // Re-throw the error with more context
+      if (error instanceof Error) {
+        throw new Error(`Failed to generate itinerary: ${error.message}`);
+      } else {
+        throw new Error('Failed to generate itinerary: Unknown error occurred');
+      }
     }
   }
 }
