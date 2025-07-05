@@ -65,7 +65,7 @@ export class AIItineraryService {
           category: "sightseeing",
           cost: "Free",
           location: "City Center",
-          image: "https://images.pexels.com/photos/161901/paris-sunset-france-monument-161901.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/1388030/pexels-photo-1388030.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Local Food Market Experience",
@@ -75,7 +75,7 @@ export class AIItineraryService {
           category: "dining",
           cost: "$15-30",
           location: "Central Market",
-          image: "https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Cultural Museum Visit",
@@ -85,7 +85,7 @@ export class AIItineraryService {
           category: "cultural",
           cost: "$12-20",
           location: "Museum District",
-          image: "https://images.pexels.com/photos/2747449/pexels-photo-2747449.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Scenic Viewpoint Sunset",
@@ -95,7 +95,7 @@ export class AIItineraryService {
           category: "sightseeing",
           cost: "Free",
           location: "Scenic Overlook",
-          image: "https://images.pexels.com/photos/1591056/pexels-photo-1591056.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/1450360/pexels-photo-1450360.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Traditional Dinner Experience",
@@ -105,7 +105,7 @@ export class AIItineraryService {
           category: "dining",
           cost: "$25-45",
           location: "Restaurant District",
-          image: "https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/1581384/pexels-photo-1581384.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Artisan Workshop Visit",
@@ -115,7 +115,7 @@ export class AIItineraryService {
           category: "cultural",
           cost: "$10-25",
           location: "Artisan Quarter",
-          image: "https://images.pexels.com/photos/1153213/pexels-photo-1153213.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/1370295/pexels-photo-1370295.jpeg?auto=compress&cs=tinysrgb&w=400"
         }
       ],
       accommodations: [
@@ -168,12 +168,9 @@ export class AIItineraryService {
         messages: [
           {
             role: 'system',
-            content: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
-
-The JSON must include real, high-quality Pexels image URLs for each activity. Use this format for images:
-https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400
 
 Make sure all image URLs are valid Pexels URLs that show relevant attractions, landmarks, or activities for the destination.`
+            content: `You are a travel expert AI that creates detailed itineraries. You must return ONLY valid JSON in the exact format requested. Do not include any explanatory text before or after the JSON.
           },
           {
             role: 'user',
@@ -340,7 +337,7 @@ Return ONLY a JSON object with this exact structure (no additional text):
       "category": "sightseeing|dining|entertainment|shopping|outdoor|cultural|relaxation",
       "cost": "Price range (e.g., $10-20) or 'Free'",
       "location": "Specific location or area",
-      "image": "https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400"
+      "image": "Use real Pexels URLs that show actual landmarks, attractions, or activities specific to ${request.destination}. Format: https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400"
     }
   ],
   "accommodations": [
@@ -358,14 +355,10 @@ Return ONLY a JSON object with this exact structure (no additional text):
 Requirements:
 - Create ${Math.max(6, days * 2)} diverse activities spread across different times of day
 - Include 3-4 accommodation options at different price points
-- Each activity must have a valid Pexels image URL showing the actual attraction/activity
-- Focus on authentic local experiences that match the specified interests and budget
 - Ensure activities are logically sequenced by time
 - Include a mix of categories: sightseeing, dining, cultural, shopping, etc.
 - Provide realistic costs and durations
 - Use specific location names within the destination`;
-  }
-
   static async generateItinerary(request: AIItineraryRequest): Promise<AIItineraryResponse> {
     console.log('Generating itinerary for request:', request);
     
