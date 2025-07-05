@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Star, TrendingUp, Sparkles, Users, Calendar, DollarSign, ArrowRight, Globe, Plane, Camera, Mountain, Waves, Building2, Award, Clock, Heart } from 'lucide-react';
+import { Search, MapPin, Star, TrendingUp, Sparkles, Users, Calendar, DollarSign, ArrowRight, Globe, Plane, Camera, Mountain, Waves, Building2, Award, Clock, Heart, ArrowLeftRight } from 'lucide-react';
 import { AIItineraryRequest } from '../types';
 import { Logo } from './Logo';
 
@@ -25,9 +25,10 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showPreferences, setShowPreferences] = useState(false);
   const [selectedDestination, setSelectedDestination] = useState<string>('');
+  const [fromLocation, setFromLocation] = useState('');
   const [preferences, setPreferences] = useState({
     budget: '',
-    travelers: 1,
+    travelers: 2,
     interests: [] as string[],
     arrivalDate: '',
     departureDate: ''
@@ -105,42 +106,6 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
       popularActivities: ['Medina Tours', 'Souk Shopping', 'Palace Visits', 'Desert Trips'],
       bestTime: 'Oct-Apr',
       avgCost: '$60-120/day'
-    },
-    {
-      id: '7',
-      name: 'New York',
-      country: 'USA',
-      image: 'https://images.pexels.com/photos/466685/pexels-photo-466685.jpeg?auto=compress&cs=tinysrgb&w=800',
-      rating: 4.7,
-      description: 'The city that never sleeps with iconic skylines, Broadway shows, and world-class dining',
-      category: 'city',
-      popularActivities: ['Times Square', 'Central Park', 'Broadway Shows', 'Museums'],
-      bestTime: 'Apr-Jun, Sep-Nov',
-      avgCost: '$200-400/day'
-    },
-    {
-      id: '8',
-      name: 'Maldives',
-      country: 'Maldives',
-      image: 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=800',
-      rating: 4.9,
-      description: 'Pristine coral islands with crystal-clear waters and luxury overwater bungalows',
-      category: 'beach',
-      popularActivities: ['Snorkeling', 'Diving', 'Spa Treatments', 'Sunset Cruises'],
-      bestTime: 'Nov-Apr',
-      avgCost: '$300-800/day'
-    },
-    {
-      id: '9',
-      name: 'Iceland',
-      country: 'Iceland',
-      image: 'https://images.pexels.com/photos/1433052/pexels-photo-1433052.jpeg?auto=compress&cs=tinysrgb&w=800',
-      rating: 4.6,
-      description: 'Land of fire and ice with dramatic landscapes, geysers, and Northern Lights',
-      category: 'adventure',
-      popularActivities: ['Northern Lights', 'Blue Lagoon', 'Waterfalls', 'Glacier Tours'],
-      bestTime: 'Jun-Aug, Sep-Mar',
-      avgCost: '$150-300/day'
     }
   ];
 
@@ -218,287 +183,370 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-purple-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-cyan-400/20 to-blue-600/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-purple-400/10 to-pink-600/10 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-20 left-20 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-40 h-40 bg-purple-500 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-cyan-500 rounded-full blur-2xl"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-8">
-        {/* Enhanced Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center space-x-6 mb-8">
-            <Logo size="xl" className="drop-shadow-lg" />
-            <div className="text-left">
-              <h1 className="text-6xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent leading-tight">
-                TravelCraft
-              </h1>
-              <p className="text-xl text-gray-600 font-medium">AI-Powered Journey Planning</p>
+      <div className="relative z-10">
+        {/* Header */}
+        <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Logo size="md" />
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">TravelCraft</h1>
+                  <p className="text-sm text-gray-600">AI-Powered Journey Planning</p>
+                </div>
+              </div>
+              
+              <nav className="hidden md:flex items-center space-x-8">
+                <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Holiday Packages</a>
+                <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Flight Schedule</a>
+                <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Account Settings</a>
+                <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Manage Booking</a>
+              </nav>
+
+              <div className="flex items-center space-x-4">
+                <button className="text-gray-700 hover:text-blue-600 font-medium transition-colors">Register</button>
+                <button className="bg-gray-800 text-white px-6 py-2 rounded-lg hover:bg-gray-900 transition-colors">Sign In</button>
+                <select className="bg-transparent text-gray-700 font-medium">
+                  <option>EN</option>
+                </select>
+              </div>
             </div>
           </div>
-          
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-              Discover Your Next
-              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> Dream Adventure</span>
+        </header>
+
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          {/* Hero Section */}
+          <div className="text-center mb-16">
+            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+              Hey Buddy! where are you
+              <br />
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Flying to?</span>
             </h2>
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              Let our AI create personalized itineraries for any destination worldwide. 
-              From hidden gems to iconic landmarks, we'll craft the perfect journey just for you.
+            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+              Discover amazing destinations and let our AI create the perfect itinerary for your next adventure
             </p>
-            
-            {/* Stats */}
-            <div className="flex flex-wrap justify-center gap-8 mb-12">
-              <div className="flex items-center space-x-2 bg-white/70 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg">
-                <Globe className="w-5 h-5 text-indigo-600" />
-                <span className="font-semibold text-gray-900">195+ Countries</span>
-              </div>
-              <div className="flex items-center space-x-2 bg-white/70 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg">
-                <Sparkles className="w-5 h-5 text-purple-600" />
-                <span className="font-semibold text-gray-900">AI-Powered</span>
-              </div>
-              <div className="flex items-center space-x-2 bg-white/70 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg">
-                <Heart className="w-5 h-5 text-pink-600" />
-                <span className="font-semibold text-gray-900">Personalized</span>
-              </div>
-              <div className="flex items-center space-x-2 bg-white/70 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg">
-                <Award className="w-5 h-5 text-cyan-600" />
-                <span className="font-semibold text-gray-900">Expert Curated</span>
-              </div>
-            </div>
           </div>
-        </div>
 
-        {/* Enhanced Search Bar */}
-        <div className="max-w-4xl mx-auto mb-16">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-300"></div>
-            <div className="relative bg-white rounded-3xl shadow-2xl border border-gray-100">
-              <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleSearchKeyPress}
-                placeholder="Where would you like to go? (e.g., Tokyo, New York, Bali, anywhere...)"
-                className="w-full pl-16 pr-6 py-6 text-lg border-0 rounded-3xl focus:ring-4 focus:ring-indigo-500/20 focus:outline-none bg-transparent placeholder-gray-500"
-              />
-              {searchQuery.trim() && !filteredDestinations.some(dest => 
-                dest.name.toLowerCase() === searchQuery.toLowerCase()
-              ) && (
-                <button
-                  onClick={handleCustomSearch}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-8 py-3 rounded-2xl transition-all duration-300 font-semibold flex items-center space-x-2 shadow-lg hover:shadow-xl"
-                >
-                  <Sparkles className="w-5 h-5" />
-                  <span>Explore "{searchQuery}"</span>
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Enhanced Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 mb-16">
-          {categories.map((category) => {
-            const IconComponent = category.icon;
-            return (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`group flex items-center space-x-3 px-8 py-4 rounded-2xl transition-all duration-300 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:scale-105 ${
-                  selectedCategory === category.id
-                    ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-indigo-500/25'
-                    : 'bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white border border-gray-200'
-                }`}
-              >
-                <IconComponent className={`w-6 h-6 transition-transform group-hover:scale-110 ${
-                  selectedCategory === category.id ? 'text-white' : 'text-indigo-600'
-                }`} />
-                <span>{category.name}</span>
+          {/* Flight Search Interface */}
+          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 mb-16 max-w-6xl mx-auto">
+            {/* Tab Navigation */}
+            <div className="flex items-center space-x-1 mb-8 bg-gray-100 rounded-xl p-1 w-fit">
+              <button className="flex items-center space-x-2 px-6 py-3 bg-gray-800 text-white rounded-lg font-medium">
+                <Plane className="w-5 h-5" />
+                <span>Flight</span>
               </button>
-            );
-          })}
-        </div>
+              <button className="flex items-center space-x-2 px-6 py-3 text-gray-600 hover:text-gray-800 rounded-lg font-medium transition-colors">
+                <Building2 className="w-5 h-5" />
+                <span>Hotel</span>
+              </button>
+              <button className="flex items-center space-x-2 px-6 py-3 text-gray-600 hover:text-gray-800 rounded-lg font-medium transition-colors">
+                <MapPin className="w-5 h-5" />
+                <span>Rent a Car</span>
+              </button>
+            </div>
 
-        {/* Custom Search Result */}
-        {searchQuery.trim() && filteredDestinations.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="relative mb-8">
-              <div className="p-8 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full w-40 h-40 mx-auto flex items-center justify-center shadow-2xl">
-                <Globe className="w-20 h-20 text-indigo-600" />
+            {/* Trip Options */}
+            <div className="flex items-center space-x-8 mb-8">
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input type="radio" name="tripType" defaultChecked className="text-blue-600" />
+                  <span className="font-medium text-gray-700">Round Trip</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input type="radio" name="tripType" className="text-blue-600" />
+                  <span className="font-medium text-gray-700">One Way</span>
+                </label>
               </div>
-              <div className="absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-                <Sparkles className="w-6 h-6 text-white" />
+              
+              <div className="flex items-center space-x-4">
+                <select className="border border-gray-300 rounded-lg px-4 py-2 font-medium text-gray-700">
+                  <option>02 Passengers</option>
+                  <option>01 Passenger</option>
+                  <option>03 Passengers</option>
+                  <option>04 Passengers</option>
+                </select>
+                
+                <select className="border border-gray-300 rounded-lg px-4 py-2 font-medium text-gray-700">
+                  <option>Business Class</option>
+                  <option>Economy Class</option>
+                  <option>First Class</option>
+                </select>
               </div>
             </div>
-            <h3 className="text-4xl font-bold text-gray-900 mb-6">Ready to explore "{searchQuery}"?</h3>
-            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Let our AI create a personalized itinerary for your destination. 
-              We'll find the best activities, restaurants, and hidden gems just for you.
-            </p>
-            <button
-              onClick={handleCustomSearch}
-              className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-12 py-5 rounded-2xl transition-all duration-300 font-bold text-xl shadow-2xl hover:shadow-indigo-500/25 transform hover:scale-105 flex items-center space-x-4 mx-auto"
-            >
-              <Sparkles className="w-7 h-7" />
-              <span>Generate AI Itinerary for {searchQuery}</span>
-              <ArrowRight className="w-6 h-6" />
-            </button>
-          </div>
-        ) : (
-          <>
-            {searchQuery.trim() === '' && (
-              <div className="text-center mb-16">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                  Trending <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">Destinations</span>
-                </h2>
-                <p className="text-xl text-gray-600">Handpicked destinations loved by travelers worldwide</p>
+
+            {/* Search Form */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+              {/* From */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">FROM</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={fromLocation}
+                    onChange={(e) => setFromLocation(e.target.value)}
+                    placeholder="Departure city"
+                    className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold text-lg"
+                  />
+                  <div className="absolute left-4 bottom-1 text-xs text-gray-500">
+                    {fromLocation && "Your Location"}
+                  </div>
+                </div>
               </div>
-            )}
-            
-            {/* Enhanced Destinations Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+
+              {/* Swap Button */}
+              <div className="flex justify-center">
+                <button className="p-3 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
+                  <ArrowLeftRight className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+
+              {/* To */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">TO</label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyPress={handleSearchKeyPress}
+                    placeholder="Destination city"
+                    className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold text-lg"
+                  />
+                  <div className="absolute left-4 bottom-1 text-xs text-gray-500">
+                    {searchQuery && "Destination"}
+                  </div>
+                </div>
+              </div>
+
+              {/* Departure Date */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">DEPARTURE</label>
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={preferences.arrivalDate}
+                    onChange={(e) => setPreferences(prev => ({ ...prev, arrivalDate: e.target.value }))}
+                    className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold text-lg"
+                  />
+                </div>
+              </div>
+
+              {/* Return Date */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">RETURN</label>
+                <div className="relative">
+                  <input
+                    type="date"
+                    value={preferences.departureDate}
+                    onChange={(e) => setPreferences(prev => ({ ...prev, departureDate: e.target.value }))}
+                    className="w-full px-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-semibold text-lg"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Search Button */}
+            <div className="mt-8 flex justify-center">
+              <button
+                onClick={searchQuery.trim() ? handleCustomSearch : undefined}
+                className="bg-gray-900 hover:bg-gray-800 text-white px-12 py-4 rounded-xl font-bold text-lg transition-colors flex items-center space-x-3 shadow-lg"
+              >
+                <span>Search Flights</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Popular Destinations */}
+          <div className="mb-16">
+            <div className="flex items-center justify-between mb-8">
+              <h3 className="text-3xl font-bold text-gray-900">Popular Destination</h3>
+              <button className="text-blue-600 hover:text-blue-700 font-semibold flex items-center space-x-2">
+                <span>Explore All</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Category Filter */}
+            <div className="flex flex-wrap gap-4 mb-8">
+              {categories.map((category) => {
+                const IconComponent = category.icon;
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all duration-200 font-medium ${
+                      selectedCategory === category.id
+                        ? 'bg-blue-600 text-white shadow-lg'
+                        : 'bg-white text-gray-700 hover:bg-blue-50 border border-gray-200'
+                    }`}
+                  >
+                    <IconComponent className="w-5 h-5" />
+                    <span>{category.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Destinations Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredDestinations.map((destination) => {
                 const IconComponent = getCategoryIcon(destination.category);
                 return (
                   <div
                     key={destination.id}
-                    className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden cursor-pointer transform hover:scale-[1.02] border border-gray-100"
+                    className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-[1.02]"
                     onClick={() => handleDestinationSelect(destination.name)}
                   >
-                    <div className="relative h-64 overflow-hidden">
+                    <div className="relative h-48 overflow-hidden">
                       <img
                         src={destination.image}
                         alt={destination.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
                       
-                      {/* Category Badge */}
                       <div className="absolute top-4 left-4">
-                        <div className="bg-white/95 backdrop-blur-sm px-4 py-2 rounded-full flex items-center space-x-2 shadow-lg">
-                          <IconComponent className="w-4 h-4 text-indigo-600" />
-                          <span className="text-sm font-semibold text-gray-700 capitalize">{destination.category}</span>
+                        <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center space-x-1">
+                          <IconComponent className="w-4 h-4 text-blue-600" />
+                          <span className="text-sm font-medium text-gray-700 capitalize">{destination.category}</span>
                         </div>
                       </div>
                       
-                      {/* Rating Badge */}
                       <div className="absolute top-4 right-4">
-                        <div className="bg-white/95 backdrop-blur-sm px-3 py-2 rounded-full flex items-center space-x-1 shadow-lg">
+                        <div className="bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full flex items-center space-x-1">
                           <Star className="w-4 h-4 text-yellow-500 fill-current" />
                           <span className="text-sm font-bold text-gray-700">{destination.rating}</span>
                         </div>
                       </div>
 
-                      {/* Location */}
                       <div className="absolute bottom-4 left-4 right-4">
-                        <h3 className="text-2xl font-bold text-white mb-1">{destination.name}</h3>
-                        <p className="text-white/90 font-medium">{destination.country}</p>
+                        <h3 className="text-xl font-bold text-white mb-1">{destination.name}</h3>
+                        <p className="text-white/90">{destination.country}</p>
                       </div>
                     </div>
 
                     <div className="p-6">
-                      <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed">{destination.description}</p>
+                      <p className="text-gray-600 mb-4 line-clamp-2">{destination.description}</p>
 
-                      <div className="space-y-3 mb-6">
+                      <div className="space-y-2 mb-4">
                         <div className="flex items-center text-sm text-gray-600">
-                          <Calendar className="w-4 h-4 mr-3 text-green-500" />
-                          <span className="font-medium">Best time: {destination.bestTime}</span>
+                          <Calendar className="w-4 h-4 mr-2 text-green-500" />
+                          <span>Best time: {destination.bestTime}</span>
                         </div>
                         <div className="flex items-center text-sm text-gray-600">
-                          <DollarSign className="w-4 h-4 mr-3 text-blue-500" />
-                          <span className="font-medium">Average cost: {destination.avgCost}</span>
+                          <DollarSign className="w-4 h-4 mr-2 text-blue-500" />
+                          <span>Average cost: {destination.avgCost}</span>
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 mb-6">
+                      <div className="flex flex-wrap gap-2 mb-4">
                         {destination.popularActivities.slice(0, 3).map((activity, index) => (
                           <span
                             key={index}
-                            className="px-3 py-1 bg-indigo-50 text-indigo-700 text-sm rounded-full font-medium"
+                            className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full"
                           >
                             {activity}
                           </span>
                         ))}
                         {destination.popularActivities.length > 3 && (
-                          <span className="px-3 py-1 bg-gray-100 text-gray-600 text-sm rounded-full font-medium">
+                          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
                             +{destination.popularActivities.length - 3} more
                           </span>
                         )}
                       </div>
 
-                      <button className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white py-4 rounded-2xl transition-all duration-300 font-bold flex items-center justify-center space-x-3 group shadow-lg hover:shadow-xl">
-                        <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                      <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl transition-colors font-medium flex items-center justify-center space-x-2">
+                        <Sparkles className="w-4 h-4" />
                         <span>Generate AI Itinerary</span>
-                        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                       </button>
                     </div>
                   </div>
                 );
               })}
             </div>
-          </>
-        )}
+          </div>
 
-        {/* Enhanced Preferences Modal */}
+          {/* Custom Search Result */}
+          {searchQuery.trim() && filteredDestinations.length === 0 && (
+            <div className="text-center py-16">
+              <div className="p-6 bg-blue-100 rounded-full w-32 h-32 mx-auto mb-6 flex items-center justify-center">
+                <Globe className="w-16 h-16 text-blue-600" />
+              </div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Ready to explore "{searchQuery}"?</h3>
+              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                Let our AI create a personalized itinerary for your destination
+              </p>
+              <button
+                onClick={handleCustomSearch}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl transition-colors font-bold text-lg shadow-lg flex items-center space-x-3 mx-auto"
+              >
+                <Sparkles className="w-6 h-6" />
+                <span>Generate AI Itinerary for {searchQuery}</span>
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Preferences Modal */}
         {showPreferences && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto border border-gray-200">
-              <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-8 text-white rounded-t-3xl">
-                <div className="flex items-center space-x-4 mb-4">
-                  <Logo size="md" />
-                  <div>
-                    <h2 className="text-3xl font-bold">Plan Your Trip to {selectedDestination}</h2>
-                    <p className="text-indigo-100 text-lg">Tell us your preferences to create the perfect itinerary</p>
-                  </div>
-                </div>
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+              <div className="p-6 border-b border-gray-200">
+                <h2 className="text-2xl font-bold text-gray-900">Plan Your Trip to {selectedDestination}</h2>
+                <p className="text-gray-600 mt-1">Tell us your preferences to create the perfect itinerary</p>
               </div>
 
-              <div className="p-8 space-y-8">
-                <div className="grid grid-cols-2 gap-6">
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-3">
-                      <Calendar className="w-5 h-5 inline mr-2 text-indigo-600" />
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <Calendar className="w-4 h-4 inline mr-2" />
                       Arrival Date
                     </label>
                     <input
                       type="date"
                       value={preferences.arrivalDate}
                       onChange={(e) => setPreferences(prev => ({ ...prev, arrivalDate: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-3">
-                      <Calendar className="w-5 h-5 inline mr-2 text-indigo-600" />
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      <Calendar className="w-4 h-4 inline mr-2" />
                       Departure Date
                     </label>
                     <input
                       type="date"
                       value={preferences.departureDate}
                       onChange={(e) => setPreferences(prev => ({ ...prev, departureDate: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-4">
-                    <DollarSign className="w-5 h-5 inline mr-2 text-indigo-600" />
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <DollarSign className="w-4 h-4 inline mr-2" />
                     Budget Range
                   </label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2">
                     {['Budget ($)', 'Mid-range ($$)', 'Luxury ($$$)', 'No preference'].map((option) => (
                       <button
                         key={option}
                         onClick={() => setPreferences(prev => ({ ...prev, budget: option }))}
-                        className={`p-4 text-sm rounded-xl border-2 transition-all duration-200 font-semibold ${
+                        className={`p-3 text-sm rounded-lg border transition-colors ${
                           preferences.budget === option
-                            ? 'bg-indigo-500 text-white border-indigo-500 shadow-lg'
-                            : 'bg-white text-gray-700 border-gray-300 hover:border-indigo-300 hover:bg-indigo-50'
+                            ? 'bg-blue-500 text-white border-blue-500'
+                            : 'bg-white text-gray-700 border-gray-300 hover:border-blue-300'
                         }`}
                       >
                         {option}
@@ -508,8 +556,8 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-4">
-                    <Users className="w-5 h-5 inline mr-2 text-indigo-600" />
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <Users className="w-4 h-4 inline mr-2" />
                     Number of Travelers
                   </label>
                   <input
@@ -518,24 +566,24 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                     max="20"
                     value={preferences.travelers}
                     onChange={(e) => setPreferences(prev => ({ ...prev, travelers: parseInt(e.target.value) || 1 }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-4">
-                    <Heart className="w-5 h-5 inline mr-2 text-indigo-600" />
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    <Heart className="w-4 h-4 inline mr-2" />
                     Interests (Select all that apply)
                   </label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2">
                     {interestOptions.map((interest) => (
                       <button
                         key={interest}
                         onClick={() => toggleInterest(interest)}
-                        className={`p-4 text-sm rounded-xl border-2 transition-all duration-200 text-left font-semibold ${
+                        className={`p-3 text-sm rounded-lg border transition-colors text-left ${
                           preferences.interests.includes(interest)
-                            ? 'bg-indigo-500 text-white border-indigo-500 shadow-lg'
-                            : 'bg-white text-gray-700 border-gray-300 hover:border-indigo-300 hover:bg-indigo-50'
+                            ? 'bg-blue-500 text-white border-blue-500'
+                            : 'bg-white text-gray-700 border-gray-300 hover:border-blue-300'
                         }`}
                       >
                         {interest}
@@ -544,20 +592,19 @@ export const DestinationSearch: React.FC<DestinationSearchProps> = ({ onGenerate
                   </div>
                 </div>
 
-                <div className="flex space-x-4 pt-6">
+                <div className="flex space-x-3 pt-4">
                   <button
                     onClick={() => setShowPreferences(false)}
-                    className="flex-1 px-8 py-4 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors font-bold text-lg"
+                    className="flex-1 px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors font-medium"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleGenerateItinerary}
-                    className="flex-2 px-12 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all duration-300 font-bold text-lg flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl"
+                    className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium flex items-center justify-center space-x-2"
                   >
-                    <Sparkles className="w-6 h-6" />
-                    <span>Generate My Perfect Itinerary</span>
-                    <ArrowRight className="w-5 h-5" />
+                    <Sparkles className="w-5 h-5" />
+                    <span>Generate Itinerary</span>
                   </button>
                 </div>
               </div>
