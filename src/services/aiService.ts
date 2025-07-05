@@ -65,7 +65,7 @@ export class AIItineraryService {
           category: "sightseeing",
           cost: "Free",
           location: "City Center",
-          image: "https://images.pexels.com/photos/1388030/pexels-photo-1388030.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/161901/paris-sunset-france-monument-161901.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Local Food Market Experience",
@@ -75,7 +75,7 @@ export class AIItineraryService {
           category: "dining",
           cost: "$15-30",
           location: "Central Market",
-          image: "https://images.pexels.com/photos/1267320/pexels-photo-1267320.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/1435904/pexels-photo-1435904.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Cultural Museum Visit",
@@ -85,7 +85,7 @@ export class AIItineraryService {
           category: "cultural",
           cost: "$12-20",
           location: "Museum District",
-          image: "https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/1004584/pexels-photo-1004584.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Scenic Viewpoint Sunset",
@@ -95,7 +95,7 @@ export class AIItineraryService {
           category: "sightseeing",
           cost: "Free",
           location: "Scenic Overlook",
-          image: "https://images.pexels.com/photos/1450360/pexels-photo-1450360.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/1591447/pexels-photo-1591447.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Traditional Dinner Experience",
@@ -105,7 +105,7 @@ export class AIItineraryService {
           category: "dining",
           cost: "$25-45",
           location: "Restaurant District",
-          image: "https://images.pexels.com/photos/1581384/pexels-photo-1581384.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=400"
         },
         {
           name: "Artisan Workshop Visit",
@@ -115,7 +115,7 @@ export class AIItineraryService {
           category: "cultural",
           cost: "$10-25",
           location: "Artisan Quarter",
-          image: "https://images.pexels.com/photos/1370295/pexels-photo-1370295.jpeg?auto=compress&cs=tinysrgb&w=400"
+          image: "https://images.pexels.com/photos/1153213/pexels-photo-1153213.jpeg?auto=compress&cs=tinysrgb&w=400"
         }
       ],
       accommodations: [
@@ -337,7 +337,7 @@ Return ONLY a JSON object with this exact structure (no additional text):
       "category": "sightseeing|dining|entertainment|shopping|outdoor|cultural|relaxation",
       "cost": "Price range (e.g., $10-20) or 'Free'",
       "location": "Specific location or area",
-      "image": "Use real Pexels URLs that show actual landmarks, attractions, or activities specific to ${request.destination}. Format: https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400"
+      "image": "Use real Pexels URLs that show relevant content for the activity type and destination. For ${request.destination}, find images that actually represent the specific activity, landmark, or attraction mentioned. Examples: museums should show museum interiors/artifacts, restaurants should show food/dining, temples should show temple architecture, markets should show market scenes. Format: https://images.pexels.com/photos/[photo-id]/pexels-photo-[photo-id].jpeg?auto=compress&cs=tinysrgb&w=400"
     }
   ],
   "accommodations": [
@@ -358,7 +358,14 @@ Requirements:
 - Ensure activities are logically sequenced by time
 - Include a mix of categories: sightseeing, dining, cultural, shopping, etc.
 - Provide realistic costs and durations
-- Use specific location names within the destination`;
+- CRITICAL: Each activity image must be directly relevant to the activity type and show what tourists would actually see/do. For example:
+  * Museum visits: Show museum interiors, artifacts, or art galleries
+  * Food experiences: Show local cuisine, restaurants, or food markets
+  * Temple/religious sites: Show actual temple architecture or religious ceremonies
+  * Scenic viewpoints: Show actual landscapes, city views, or natural attractions
+  * Cultural activities: Show cultural performances, traditional crafts, or local customs
+  * Shopping: Show markets, bazaars, or shopping districts
+- Avoid generic stock photos that don't match the specific activity described`;
   }
 
   static async generateItinerary(request: AIItineraryRequest): Promise<AIItineraryResponse> {
